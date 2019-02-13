@@ -25,7 +25,7 @@ echo $currentdir
 
 echo "Building docker image: $builddir with tag: $basetag"
 echo "-------------------------------------------------------------------------"
-cd ../$builddir
+cd ../../$builddir
 
 echo "https://github.com/philips-software/$project/tree/$commitsha" > REPO
 echo "$alltags" >> TAGS
