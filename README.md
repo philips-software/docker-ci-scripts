@@ -33,6 +33,18 @@ There are several CI/CD systems available. We start with instructions on [Travis
 ### Travis
 Example for Travis:
 
+Make sure you set the following environment variables:
+  - DOCKER_USERNAME --> Docker hub username
+  - DOCKER_PASSWORD --> Docker hub password
+  - DOCKER_ORGANIZATION --> Container will be pushed in this organization. f.e. philipssoftware
+Optional environment variable:
+  - GITHUB_ORGANIZATION --> Github organization. defaults to DOCKER_ORGANIZATION. f.e. philips-software
+
+Example: (we're using travis-ci.com so the `--com` is needed)
+```
+travis env set DOCKER_ORGANIZATION 'philipssoftware' --com
+```
+
 `.travis.yml`:
 ```
 language:
