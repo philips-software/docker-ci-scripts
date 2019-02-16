@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd `dirname "$0"`
+docker_organization=$DOCKER_ORGANIZATION
 
 if [ "$#" -lt 2 ]; then
   echo "You need to provide a directory with a Dockerfile in it and a tag."
@@ -19,13 +20,13 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 cd $builddir
 
-echo "Pushing philipssoftware/$basetag"
-docker push philipssoftware/$basetag
+echo "Pushing $docker_organization/$basetag"
+docker push $docker_organization/$basetag
 
 while test ${#} -gt 0
 do
-  echo "Pushing philipssoftware/$1"
-  docker push philipssoftware/$1
+  echo "Pushing $docker_organization/$1"
+  docker push $docker_organization/$1
   shift
 done
 echo "============================================================================================"
