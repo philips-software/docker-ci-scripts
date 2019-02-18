@@ -18,8 +18,6 @@ echo "Login to docker"
 echo "-------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-cd $builddir
-
 echo "Pushing $docker_organization/$basetag"
 docker push $docker_organization/$basetag
 
