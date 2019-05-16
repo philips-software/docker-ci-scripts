@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 currentdir=$(pwd)
 
 cd `dirname "$0"`
