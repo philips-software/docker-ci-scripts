@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd `dirname "$0"`
 
 if [ "$#" -lt 2 ]; then
