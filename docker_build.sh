@@ -3,10 +3,9 @@
 set -e
 
 currentdir=$(pwd)
+projectdir="$(dirname $(dirname ${currentdir}))"
 
 cd `dirname "$0"`
-
-basedir="$(dirname "$(pwd)")"
 
 # Checking number of arguments
 
@@ -17,7 +16,7 @@ fi
 
 # Checking DOCKER_ORGANIZATION environment variable 
 
-echo "-------------------------------------------------------------------------"
+echo "-------------------------------------------------------------------------------------------"
 
 docker_organization=$DOCKER_ORGANIZATION
 if [ -z "$docker_organization" ]; then
@@ -34,8 +33,7 @@ if [ -z "$github_organization" ]; then
   github_organization=$docker_organization
 fi
 echo "Github organization: $github_organization"
-
-echo "-------------------------------------------------------------------------"
+echo "-------------------------------------------------------------------------------------------"
 
 builddir=$1
 shift
@@ -44,22 +42,25 @@ basetag=$1
 shift
 tags=$@
 
-project=`basename $basedir`
+cd $projectdir
+
+project=`basename $projectdir`
 commitsha=`git rev-parse --verify HEAD`
 
-echo $currentdir
+cd $builddir
 
 echo "Building docker image: $builddir with tag: $basetag"
-echo "-------------------------------------------------------------------------"
-cd ../../$builddir
+echo "-------------------------------------------------------------------------------------------"
 
-echo "$alltags" >> TAGS
+echo "$alltags" > TAGS
 echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
 
 docker build . -t $docker_organization/$basetag
+
+echo "-------------------------------------------------------------------------------------------"
 while test ${#} -gt 0
 do
-  echo "Tagging $docker_organization/$basetag as #docker_organization/$1"
+  echo "Tagging $docker_organization/$basetag as $docker_organization/$1"
   docker tag $docker_organization/$basetag $docker_organization/$1
   shift
 done
