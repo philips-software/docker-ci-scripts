@@ -37,6 +37,7 @@ Make sure you set the following secrets in github:
   - DOCKER_USERNAME --> Docker hub username
   - DOCKER_PASSWORD --> Docker hub password
   - DOCKER_ORGANIZATION --> Container will be pushed in this organization. f.e. philipssoftware
+
 Optional environment variable:
   - GITHUB_ORGANIZATION --> Github organization. defaults to DOCKER_ORGANIZATION. f.e. philips-software
 
@@ -48,22 +49,23 @@ on: [push]
 name: Build Docker images
 
 jobs:
-
-  build:
-    name: Build
+  build_scala:
+    name: Build scala
     runs-on: ubuntu-latest
 
     steps:
 
     - uses: actions/checkout@master
+      with:
+        submodules: true
 
-    - name: Build Docker Images
+    - name: Build Docker Images with node
       run: |
-        export DOCKER_USERNAME=${{secret.DOCKER_USERNAME}}
-        export DOCKER_PASSWORD=${{secret.DOCKER_PASSWORD}}
-        export DOCKER_ORGANIZATION=${{secret.DOCKER_ORGANIZATION}}
-        export GITHUB_ORGANIZATION=${{secret.GITHUB_ORGANIZATION}}
-        ./scripts/bin/docker_build_and_push.sh 2/alpine scala scala:2 scala:2.13 scala:2.13.0-1.2.8-alpine
+        export DOCKER_USERNAME=${{secrets.DOCKER_USERNAME}}
+        export DOCKER_PASSWORD='${{secrets.DOCKER_PASSWORD}}'
+        export DOCKER_ORGANIZATION=${{secrets.DOCKER_ORGANIZATION}}
+        export GITHUB_ORGANIZATION=${{secrets.GITHUB_ORGANIZATION}}
+        ./ci/bin/docker_build_and_push.sh 2/alpine scala scala:2 scala:2.13 scala:2.13.0-1.2.8-alpine
 ```
 
 ### Travis
