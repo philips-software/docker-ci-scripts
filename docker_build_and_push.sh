@@ -2,10 +2,15 @@
 
 set -e
 
+help() { 
+	echo "This script requires two arguments, directory with the Docker file and the DOcker tag.\n"
+  echo -e "Usages: "`basename "$0"` "<docker-file-directory> <tag>"
+} 
+
 directory=`dirname "$0"`
 
 if [ "$#" -lt 2 ]; then
-  echo "You need to provide a directory with a Dockerfile in it and a tag."
+  help
   exit 1
 fi
 
