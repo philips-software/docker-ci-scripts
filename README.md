@@ -27,39 +27,51 @@ git submodule add -b master https://github.com/philips-software/docker-ci-script
 
 ## Use the scripts in your CI 
 
-This is an example how you can use the scripts in your CI/CD system. 
-There are several CI/CD systems available. We start with instructions on [Travis CI](https://travis-ci.org/).
+This is an example how you can use the scripts in your CI/CD system.
+Currently the preferred way of using these scripts are [Github Actions](https://github.com/features/actions).
 
-### Travis
-Example for Travis:
+### Github Actions
+Example for Github Actions:
 
-Make sure you set the following environment variables:
+Make sure you set the following secrets in github:
   - DOCKER_USERNAME --> Docker hub username
   - DOCKER_PASSWORD --> Docker hub password
   - DOCKER_ORGANIZATION --> Container will be pushed in this organization. f.e. philipssoftware
 Optional environment variable:
   - GITHUB_ORGANIZATION --> Github organization. defaults to DOCKER_ORGANIZATION. f.e. philips-software
 
-Example: (we're using travis-ci.com so the `--com` is needed)
-```
-travis env set DOCKER_ORGANIZATION 'philipssoftware' --com
-```
+`.github/workflows/build_docker.yml`:
 
-`.travis.yml`:
 ```
-language:
-  - bash
+on: [push]
 
-services:
-  - docker
-
-sudo: true
+name: Build Docker images
 
 jobs:
-  include:
-    - stage: build
-      script: ./ci/bin/docker_build_and_push.sh 11/jdk/slim-aws openjdk:11-aws openjdk:11-jdk-aws openjdk:11-jdk-slim-aws openjdk:11.0.2-jdk-slim-aws
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@master
+
+    - name: Build Docker Images
+      run: |
+        export DOCKER_USERNAME=${{secret.DOCKER_USERNAME}}
+        export DOCKER_PASSWORD=${{secret.DOCKER_PASSWORD}}
+        export DOCKER_ORGANIZATION=${{secret.DOCKER_ORGANIZATION}}
+        export GITHUB_ORGANIZATION=${{secret.GITHUB_ORGANIZATION}}
+        ./scripts/bin/docker_build_and_push.sh 2/alpine scala scala:2 scala:2.13 scala:2.13.0-1.2.8-alpine
 ```
+
+### Travis
+When you want to use these scripts with Travis, you should use the `trabis-ci` branch of the scripts.
+https://github.com/philips-software/docker-ci-scripts/tree/travis-ci
+
+Instructions can be found in the README of that branch.
+
 
 ## Example projects
 
