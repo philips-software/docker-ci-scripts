@@ -3,7 +3,6 @@
 set -e
 
 currentdir=$(pwd)
-projectdir="$(dirname $(dirname ${currentdir}))"
 
 cd `dirname "$0"`
 
@@ -42,11 +41,15 @@ basetag=$1
 shift
 tags=$@
 
-cd $projectdir
+project=`basename $currentdir`
 
-project=`basename $projectdir`
-commitsha=`git rev-parse --verify HEAD`
+commitsha=${GITHUB_SHA}
+if [ -z "$GITHUB_SHA" ]; then
+  echo "  No GITHUB_SHA set. Try to get it myself with git."
+  commitsha=`git rev-parse --verify HEAD`
+fi
 
+cd $currentdir
 cd $builddir
 
 echo "Building docker image: $builddir with tag: $basetag"
