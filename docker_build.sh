@@ -49,6 +49,7 @@ if [ -z "$GITHUB_SHA" ]; then
   commitsha=`git rev-parse --verify HEAD`
 fi
 
+cd $currentdir
 cd $builddir
 
 echo "Building docker image: $builddir with tag: $basetag"
