@@ -1,0 +1,20 @@
+name: 'Docker Build and Push for Github Action'
+description: 'Builds docker images and publish master'
+inputs:
+  dockerfile:
+    description: 'Path to Dockerfile'
+    required: true
+  tags:
+    description: 'String with tags, separated by a space'
+    required: true
+  push-branch:
+    description: 'Specifies branch to push'
+    required: true
+    default: 'master'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.dockerfile }}
+    - ${{ inputs.tags }}
+    - ${{ inputs.push-branch }}
