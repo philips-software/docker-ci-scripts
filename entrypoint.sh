@@ -17,5 +17,7 @@ pwd
 echo "ls"
 ls
 
-/docker_build_and_push.sh $1 $2
+cd /
+
+docker_build_and_push.sh /github/workspace/$1 $2
 
