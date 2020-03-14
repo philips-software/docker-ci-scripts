@@ -7,12 +7,23 @@ help() {
   echo -e "Usages: "`basename "$0"` "<docker-file-directory> <tag>"
 } 
 
-directory=`dirname "$0"`
-
 if [ "$#" -lt 2 ]; then
   help
   exit 1
 fi
 
-./${directory}/docker_build.sh $@
-./${directory}/docker_push.sh $@
+./docker_build.sh $@
+
+echo "PUSH_BRANCH: $PUSH_BRANCH"
+echo "GITHUB_REF: $GITHUB_REF"
+
+if [[ "$GITHUB_REF" = "refs/heads/$PUSH_BRANCH" ]]
+then
+    echo "Matches"
+    echo "run docker_push"
+    ./docker_push.sh $@
+else
+    echo "Do not match: $GITHUB_REF != refs/heads/$PUSH_BRANCH"
+    exit 0
+fi
+

@@ -1,83 +1,89 @@
-# docker-ci-scripts
-Docker CI scripts
+<div align="center">
 
-## Purpose
+# GitHub Action for creating and publishing docker images 
 
-## Content
+[![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
+
+This action will build a docker container from a given directory. You can give the docker container multiple tags.
+
+You can specify for which branch it should also push it to docker hub. Default branch is `master`
+
+Each docker container contains information about the exact context in which the container is build.
+</div>
+
+## Contents
+
+- [Inputs](#inputs)
+- [Environment Variables](#environment-variables)
+- [Example Usage](#example-usage)
+- [Example Projects](#example-projects)
+- [Contributors](#contributors)
+- [License](#license)
+
+## Inputs
+
+### `dockerfile`
+
+**Required** Path to Dockerfile. Example: `12`
+
+### `tags`
+
+**Required** String with tags, separated by a space. Example: `node node:12 node:12.1`
+
+### `push-branch`
+
+**Optional** Specifies branch to push. Defaults to `master`
+
+## Environment variables
+
+These variables can be set in the github repository secret vault.
+
+### `DOCKER_USERNAME`
+
+**Required** Docker hub username
+
+### `DOCKER_PASSWORD`
+
+**Required**  Docker hub password
+
+### `DOCKER_ORGANIZATION`
+
+**Required** Container will be pushed in this organization. Example: `. philipssoftware`
+No need to put this in GitHub Secret vault. This will be public anyway.
+
+### `GITHUB_ORGANIZATION`
+
+**Optional** Github organization. defaults to DOCKER_ORGANIZATION. Example: `philips-software`
+No need to put this in GitHub Secret vault. This will be public anyway.
+
+In every docker container there are two files:
+- `TAGS` - contains all tags associated with this container at time it was build.
+- `REPO` - contains a link to the github repository with the commit sha..
+
+## Example usage
 
 ```
-.
-├── docker_build.sh
-├── docker_build_and_push.sh
-└── docker_push.sh
+- uses: github.com/philips-software/docker-ci-scripts@v1
+  with:
+    dockerfile: '12'
+    tags: 'node node:12 node:12.1 node 12.1.4'
+  env:
+    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
+    DOCKER_ORGANIZATION: myDockerOrganization
 ```
-
-`docker_build.sh` - builds docker container in the given directory and tags container as given as extra parameters
-`docker_build_and_push.sh` - builds and pushes the dockers
-`docker_push.sh` - pushes the docker containers
-
-## Usage
-
-### Include scripts in repo
-
-Include the scripts as submodule in your project:
-```
-git submodule add -b master https://github.com/philips-software/docker-ci-scripts.git ci/bin 
-```
-
-## Use the scripts in your CI 
-
-This is an example how you can use the scripts in your CI/CD system.
-Currently the preferred way of using these scripts are [Github Actions](https://github.com/features/actions).
-
-### Github Actions
-Example for Github Actions:
-
-Make sure you set the following secrets in github:
-  - DOCKER_USERNAME --> Docker hub username
-  - DOCKER_PASSWORD --> Docker hub password
-  - DOCKER_ORGANIZATION --> Container will be pushed in this organization. f.e. philipssoftware
-
-Optional environment variable:
-  - GITHUB_ORGANIZATION --> Github organization. defaults to DOCKER_ORGANIZATION. f.e. philips-software
-
-`.github/workflows/build_docker.yml`:
-
-```
-on: [push]
-
-name: Build Docker images
-
-jobs:
-  build_scala:
-    name: Build scala
-    runs-on: ubuntu-latest
-
-    steps:
-
-    - uses: actions/checkout@master
-      with:
-        submodules: true
-
-    - name: Build Docker Images with node
-      run: |
-        export DOCKER_USERNAME=${{secrets.DOCKER_USERNAME}}
-        export DOCKER_PASSWORD='${{secrets.DOCKER_PASSWORD}}'
-        export DOCKER_ORGANIZATION=${{secrets.DOCKER_ORGANIZATION}}
-        export GITHUB_ORGANIZATION=${{secrets.GITHUB_ORGANIZATION}}
-        ./ci/bin/docker_build_and_push.sh 2/alpine scala scala:2 scala:2.13 scala:2.13.0-1.2.8-alpine
-```
-
-### Travis
-When you want to use these scripts with Travis, you should use the `trabis-ci` branch of the scripts.
-https://github.com/philips-software/docker-ci-scripts/tree/travis-ci
-
-Instructions can be found in the README of that branch.
-
 
 ## Example projects
 
-- [philips-software/openjdk](https://github.com/philips-software/openjdk)
-- [philips-software/goss](https://github.com/philips-software/goss)
-- [philips-software/bats](https://github.com/philips-software/bats)
-- [philips-software/scala](https://github.com/philips-software/bats)
+- [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
+- [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
+- [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
+- [philips-software/docker-scala](https://github.com/philips-software/docker-bats)
+
+## Contributors
+
+[Thanks goes to these contributors](https://github.com/philips-software/docker-ci-scripts/graphs/contributors)!
+
+## License
+
+[MIT License](./LICENSE)

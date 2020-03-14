@@ -1,0 +1,21 @@
+name: 'docker-build-and-publish'
+description: 'Builds docker images and publish master'
+author: "Jeroen Knoops <jeroen.knoops@philips.com>"
+inputs:
+  dockerfile:
+    description: 'Path to Dockerfile'
+    required: true
+  tags:
+    description: 'String with tags, separated by a space'
+    required: true
+  push-branch:
+    description: 'Specifies branch to push'
+    required: true
+    default: 'master'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.dockerfile }}
+    - ${{ inputs.tags }}
+    - ${{ inputs.push-branch }}

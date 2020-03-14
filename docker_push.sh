@@ -16,6 +16,17 @@ basetag=$1
 shift
 tags=$@
 
+
+if [ -z "$DOCKER_PASSWORD" ]; then
+  echo "  No DOCKER_PASSWORD set. Please provde"
+  exit 1
+fi
+
+if [ -z "$DOCKER_USERNAME" ]; then
+  echo "  No DOCKER_USERNAME set. Please provde"
+  exit 1
+fi
+
 echo "Login to docker"
 echo "-------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
