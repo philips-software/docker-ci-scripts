@@ -63,7 +63,7 @@ In every docker container there are two files:
 ## Example usage
 
 ```
-- uses: github.com/philips-software/docker-ci-scripts@v1
+- uses: philips-software/docker-ci-scripts@v1
   with:
     dockerfile: '12'
     tags: 'node node:12 node:12.1 node 12.1.4'
