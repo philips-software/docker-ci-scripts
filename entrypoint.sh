@@ -11,5 +11,5 @@ echo $3
 
 export PUSH_BRANCH=$3
 
-bash -c docker_build_and_push.sh $1 $2
+./docker_build_and_push.sh $1 $2
 
