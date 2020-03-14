@@ -15,4 +15,11 @@ if [ "$#" -lt 2 ]; then
 fi
 
 ./${directory}/docker_build.sh $@
+
+echo "TODO: add git check on PUSH_BRANCH"
+
+echo "PUSH_BRANCH: $PUSH_BRANCH"
+echo "GITHUB_REF: $GITHUB_REF"
+
+exit 1
 ./${directory}/docker_push.sh $@
