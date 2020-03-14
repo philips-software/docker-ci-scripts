@@ -1,5 +1,6 @@
-name: 'Docker Build and Push for Github Action'
+name: 'docker-build-and-publish'
 description: 'Builds docker images and publish master'
+author: "Jeroen Knoops <jeroen.knoops@philips.com>"
 inputs:
   dockerfile:
     description: 'Path to Dockerfile'

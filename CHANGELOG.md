@@ -6,6 +6,9 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+### BREAKING
+- [#17] - Now available as github action. No more git submodules.
+
 ### Changed
 - [#10] - Adjust paths for Github Actions runners
 
@@ -19,6 +22,7 @@ and this project uses the version of main tool as main version number .
 - [#1] - Custom DOCKER_ORGANIZATION and GITHUB_ORGANIZATION.
 - Initial start
 
+[#17]: https://github.com/philips-software/docker-ci-scripts/issues/17
 [#10]: https://github.com/philips-software/docker-ci-scripts/issues/10
 [#3]: https://github.com/philips-software/docker-ci-scripts/issues/3
 [#1]: https://github.com/philips-software/docker-ci-scripts/issues/1
