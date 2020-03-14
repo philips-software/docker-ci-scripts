@@ -23,8 +23,8 @@ if [[ "$GITHUB_REF" = "refs/heads/$PUSH_BRANCH" ]]
 then
     echo "Matches"
 else
-    echo "Do not match"
+    echo "Do not match: $GITHUB_REF != refs/heads/$PUSH_BRANCH"
+    exit 0
 fi
 
-exit 1
 ./docker_push.sh $@
