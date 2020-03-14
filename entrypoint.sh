@@ -19,5 +19,5 @@ ls
 
 cd /
 
-docker_build_and_push.sh /github/workspace/$1 $2
+./docker_build_and_push.sh /github/workspace/$1 $2
 
