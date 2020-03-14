@@ -17,5 +17,5 @@ pwd
 echo "ls"
 ls
 
-./docker_build_and_push.sh $1 $2
+/docker_build_and_push.sh $1 $2
 
