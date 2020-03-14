@@ -14,17 +14,16 @@ fi
 
 ./docker_build.sh $@
 
-echo "TODO: add git check on PUSH_BRANCH"
-
 echo "PUSH_BRANCH: $PUSH_BRANCH"
 echo "GITHUB_REF: $GITHUB_REF"
 
 if [[ "$GITHUB_REF" = "refs/heads/$PUSH_BRANCH" ]]
 then
     echo "Matches"
+    echo "run docker_push"
+    ./docker_push.sh $@
 else
     echo "Do not match: $GITHUB_REF != refs/heads/$PUSH_BRANCH"
     exit 0
 fi
 
-./docker_push.sh $@

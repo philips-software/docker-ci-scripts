@@ -2,6 +2,8 @@
 
 set -e
 
+echo "docker push"
+
 cd `dirname "$0"`
 docker_organization=$DOCKER_ORGANIZATION
 
