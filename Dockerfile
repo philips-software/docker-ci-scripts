@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM docker:19.03.8-git
 
 RUN apk update && apk add \
     bash \
