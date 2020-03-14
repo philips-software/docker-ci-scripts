@@ -11,5 +11,11 @@ echo $3
 
 export PUSH_BRANCH=$3
 
+echo "pwd"
+pwd
+
+echo "ls"
+ls
+
 ./docker_build_and_push.sh $1 $2
 
