@@ -1,6 +1,9 @@
 name: 'docker-build-and-publish'
 description: 'Builds docker images and publish master'
 author: "Jeroen Knoops <jeroen.knoops@philips.com>"
+branding:
+  icon: "anchor"
+  color: "darkgray"
 inputs:
   dockerfile:
     description: 'Path to Dockerfile'
