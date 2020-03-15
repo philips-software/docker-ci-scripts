@@ -38,8 +38,8 @@ echo "--------------------------------------------------------------------------
 
 builddir=$1
 shift
-alltags=$*
 basetag=$1
+alltags=$*
 
 project=$(basename "$currentdir")
 
