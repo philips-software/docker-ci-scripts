@@ -38,8 +38,9 @@ echo "--------------------------------------------------------------------------
 
 builddir=$1
 shift
+# shellcheck disable=SC2124
+alltags=$@
 basetag=$1
-alltags=$*
 
 project=$(basename "$currentdir")
 
