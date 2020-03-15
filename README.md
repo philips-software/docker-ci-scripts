@@ -63,7 +63,7 @@ In every docker container there are two files:
 ## Example usage
 
 ```
-- uses: philips-software/docker-ci-scripts@v1
+- uses: philips-software/docker-ci-scripts@v1.0.1
   with:
     dockerfile: '12'
     tags: 'node node:12 node:12.1 node 12.1.4'
@@ -78,7 +78,7 @@ In every docker container there are two files:
 - [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
 - [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
 - [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
-- [philips-software/docker-scala](https://github.com/philips-software/docker-bats)
+- [philips-software/docker-scala](https://github.com/philips-software/docker-scala)
 
 ## Contributors
 
