@@ -15,7 +15,7 @@ fi
 
 # Checking DOCKER_ORGANIZATION environment variable 
 
-echo "-------------------------------------------------------------------------------------------"
+echo "--------------------------------------------------------------------------------------------"
 
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
@@ -34,13 +34,14 @@ if [ -z "$github_organization" ]; then
   github_organization=$docker_organization
 fi
 echo "Github organization: $github_organization"
-echo "-------------------------------------------------------------------------------------------"
+echo "--------------------------------------------------------------------------------------------"
 
 builddir=$1
 shift
-# shellcheck disable=SC2124
-alltags=$@
-basetag=$1
+alltags=$*
+IFS=' '
+read -ra tags <<< "$alltags"
+basetag=${tags[0]}
 
 project=$(basename "$currentdir")
 
@@ -53,19 +54,18 @@ fi
 cd "$builddir"
 
 echo "Building docker image: $builddir with tag: $basetag"
-echo "-------------------------------------------------------------------------------------------"
+echo "--------------------------------------------------------------------------------------------"
 
 echo "$alltags" > TAGS
 echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
 
 docker build . -t "$docker_organization"/"$basetag"
 
-echo "-------------------------------------------------------------------------------------------"
-while test ${#} -gt 0
+echo "--------------------------------------------------------------------------------------------"
+for tag in "${tags[@]:1}"
 do
-  echo "Tagging $docker_organization/$basetag as $docker_organization/$1"
-  docker tag "$docker_organization"/"$basetag" "$docker_organization"/"$1"
-  shift
+  echo "Tagging $docker_organization/$basetag as $docker_organization/$tag"
+  docker tag "$docker_organization"/"$basetag" "$docker_organization"/"$tag"
 done
 echo "============================================================================================"
 echo "Finished building docker images: $builddir"

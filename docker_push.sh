@@ -14,9 +14,10 @@ fi
 
 builddir=$1
 shift
-basetag=$1
-shift
-
+alltags=$*
+IFS=' '
+read -ra tags <<< "$alltags"
+basetag=${tags[0]}
 
 if [ -z "$DOCKER_PASSWORD" ]; then
   echo "  No DOCKER_PASSWORD set. Please provde"
@@ -29,17 +30,16 @@ if [ -z "$DOCKER_USERNAME" ]; then
 fi
 
 echo "Login to docker"
-echo "-------------------------------------------------------------------------"
+echo "--------------------------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 echo "Pushing $docker_organization/$basetag"
 docker push "$docker_organization"/"$basetag"
 
-while test ${#} -gt 0
+for tag in "${tags[@]:1}"
 do
-  echo "Pushing $docker_organization/$1"
-  docker push "$docker_organization"/"$1"
-  shift
+  echo "Pushing $docker_organization/$tag"
+  docker push "$docker_organization"/"$tag"
 done
 echo "============================================================================================"
 echo "Finished pushing docker images: $builddir"
