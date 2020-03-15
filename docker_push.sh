@@ -2,7 +2,9 @@
 
 set -e
 
-cd `dirname "$0"`
+cd "$(dirname "$0")"
+
+# shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
 if [ "$#" -lt 2 ]; then
@@ -14,7 +16,6 @@ builddir=$1
 shift
 basetag=$1
 shift
-tags=$@
 
 
 if [ -z "$DOCKER_PASSWORD" ]; then
@@ -32,16 +33,14 @@ echo "-------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 echo "Pushing $docker_organization/$basetag"
-docker push $docker_organization/$basetag
+docker push "$docker_organization"/"$basetag"
 
 while test ${#} -gt 0
 do
   echo "Pushing $docker_organization/$1"
-  docker push $docker_organization/$1
+  docker push "$docker_organization"/"$1"
   shift
 done
 echo "============================================================================================"
 echo "Finished pushing docker images: $builddir"
 echo "============================================================================================"
-
-
