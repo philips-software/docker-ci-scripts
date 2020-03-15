@@ -4,7 +4,7 @@ set -e
 
 currentdir=$(pwd)
 
-cd `dirname "$0"`
+cd "$(dirname "$0")"
 
 # Checking number of arguments
 
@@ -17,6 +17,7 @@ fi
 
 echo "-------------------------------------------------------------------------------------------"
 
+# shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 if [ -z "$docker_organization" ]; then
   echo "  No DOCKER_ORGANIZATION set. Please provde"
@@ -26,6 +27,7 @@ echo "Docker organization: $docker_organization"
 
 # Checking GITHUB_ORGANIZATION environment variable
 
+# shellcheck disable=SC2153
 github_organization=$GITHUB_ORGANIZATION
 if [ -z "$github_organization" ]; then
   echo "  No GITHUB_ORGANIZATION set. Using the DOCKER_ORGANIZATION ( $docker_organization ) instead."
@@ -36,21 +38,18 @@ echo "--------------------------------------------------------------------------
 
 builddir=$1
 shift
-alltags=$@
+alltags=$*
 basetag=$1
-shift
-tags=$@
 
-project=`basename $currentdir`
+project=$(basename "$currentdir")
 
 commitsha=${GITHUB_SHA}
 if [ -z "$GITHUB_SHA" ]; then
   echo "  No GITHUB_SHA set. Try to get it myself with git."
-  commitsha=`git rev-parse --verify HEAD`
+  commitsha=$(git rev-parse --verify HEAD)
 fi
 
-cd $currentdir
-cd $builddir
+cd "$builddir"
 
 echo "Building docker image: $builddir with tag: $basetag"
 echo "-------------------------------------------------------------------------------------------"
@@ -58,13 +57,13 @@ echo "--------------------------------------------------------------------------
 echo "$alltags" > TAGS
 echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
 
-docker build . -t $docker_organization/$basetag
+docker build . -t "$docker_organization"/"$basetag"
 
 echo "-------------------------------------------------------------------------------------------"
 while test ${#} -gt 0
 do
   echo "Tagging $docker_organization/$basetag as $docker_organization/$1"
-  docker tag $docker_organization/$basetag $docker_organization/$1
+  docker tag "$docker_organization"/"$basetag" "$docker_organization"/"$1"
   shift
 done
 echo "============================================================================================"
