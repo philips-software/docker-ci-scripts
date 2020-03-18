@@ -6,6 +6,8 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+## [v2] - 2020-03-18
+
 ### BREAKING
 
 * [#17] - Now available as github action. No more git submodules.
@@ -34,6 +36,7 @@ and this project uses the version of main tool as main version number .
 [#3]: https://github.com/philips-software/docker-ci-scripts/issues/3
 [#1]: https://github.com/philips-software/docker-ci-scripts/issues/1
 
-[Unreleased]: https://github.com/philips-software/docker-ci-scripts/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/philips-software/docker-ci-scripts/compare/v2...HEAD
+[v2]: https://github.com/philips-software/docker-ci-scripts/compare/1.0.1...v2
 [1.0.1]: https://github.com/philips-software/docker-ci-scripts/compare/1.0.0...1.0.1
 
