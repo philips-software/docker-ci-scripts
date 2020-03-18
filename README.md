@@ -73,7 +73,7 @@ In every docker container there are two files:
 
 ``` 
 
-* uses: philips-software/docker-ci-scripts@v1.0.1
+* uses: philips-software/docker-ci-scripts@v2
 
   with:
     dockerfile: '12'
