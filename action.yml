@@ -8,6 +8,9 @@ inputs:
   dockerfile:
     description: 'Path to Dockerfile'
     required: true
+  image-name:
+    description: 'The name of the Docker image'
+    required: true
   tags:
     description: 'String with tags, separated by a space'
     required: true
@@ -24,6 +27,7 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.dockerfile }}
+    - ${{ inputs.image-name }}
     - ${{ inputs.tags }}
     - ${{ inputs.push-branch }}
     - ${{ inputs.docker-registry }}

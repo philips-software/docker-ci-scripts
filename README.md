@@ -26,9 +26,13 @@ Each docker container contains information about the exact context in which the 
 
 **Required** Path to Dockerfile. Example: `12` 
 
+### `image-name` 
+
+**Required** Name of the Docker image. Example: `node` 
+
 ### `tags` 
 
-**Required** String with tags, separated by a space. Example: `node node:12 node:12.1` 
+**Required** String with tags, separated by a space. Example: `latest 12 12.1` 
 
 ### `push-branch` 
 
@@ -73,7 +77,8 @@ In every docker container there are two files:
 
   with:
     dockerfile: '12'
-    tags: 'node node:12 node:12.1 node 12.1.4'
+    image-name: 'node'
+    tags: 'latest 12 12.1 12.1.4'
   env:
     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
