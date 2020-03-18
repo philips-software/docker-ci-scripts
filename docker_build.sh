@@ -43,7 +43,7 @@ IFS=' '
 read -ra tags <<< "$alltags"
 basetag=${tags[0]}
 
-project=$(basename $(git rev-parse --show-toplevel))
+project=${GITHUB_REPOSITORY}
 
 commitsha=${GITHUB_SHA}
 if [ -z "$GITHUB_SHA" ]; then
@@ -56,11 +56,11 @@ cd "$builddir"
 echo "Building docker image: $builddir with name: $imagename/$basetag"
 echo "--------------------------------------------------------------------------------------------"
 
-echo "$alltags"
+echo "tags: $alltags"
 echo "$alltags" > TAGS
 
-echo "https://github.com/$github_organization/$project/tree/$commitsha"
-echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
+echo "repo: https://github.com/$project/tree/$commitsha"
+echo "https://github.com/$project/tree/$commitsha" > REPO
 
 docker build . -t "$DOCKER_REGISTRY"/"$docker_organization"/"$imagename":"$basetag"
 
