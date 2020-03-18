@@ -6,64 +6,71 @@
 
 This action will build a docker container from a given directory. You can give the docker container multiple tags.
 
-You can specify for which branch it should also push it to docker hub. Default branch is `master`
+You can specify for which branch it should also push it to docker hub. Default branch is `master` 
 
 Each docker container contains information about the exact context in which the container is build.
 </div>
 
 ## Contents
 
-- [Inputs](#inputs)
-- [Environment Variables](#environment-variables)
-- [Example Usage](#example-usage)
-- [Example Projects](#example-projects)
-- [Contributors](#contributors)
-- [License](#license)
+* [Inputs](#inputs)
+* [Environment Variables](#environment-variables)
+* [Example Usage](#example-usage)
+* [Example Projects](#example-projects)
+* [Contributors](#contributors)
+* [License](#license)
 
 ## Inputs
 
-### `dockerfile`
+### `dockerfile` 
 
-**Required** Path to Dockerfile. Example: `12`
+**Required** Path to Dockerfile. Example: `12` 
 
-### `tags`
+### `tags` 
 
-**Required** String with tags, separated by a space. Example: `node node:12 node:12.1`
+**Required** String with tags, separated by a space. Example: `node node:12 node:12.1` 
 
-### `push-branch`
+### `push-branch` 
 
-**Optional** Specifies branch to push. Defaults to `master`
+**Optional** Specifies branch to push. Defaults to `master` 
 
 ## Environment variables
 
 These variables can be set in the github repository secret vault.
 
-### `DOCKER_USERNAME`
+### `DOCKER_USERNAME` 
 
 **Required** Docker hub username
 
-### `DOCKER_PASSWORD`
+### `DOCKER_PASSWORD` 
 
 **Required**  Docker hub password
 
-### `DOCKER_ORGANIZATION`
+### `DOCKER_REGISTRY` 
 
-**Required** Container will be pushed in this organization. Example: `. philipssoftware`
+**Optional** Registry to push the docker image to. Defaults to Docker hub.
+
+### `DOCKER_ORGANIZATION` 
+
+**Required** Container will be pushed in this organization. Example: `philipssoftware` 
 No need to put this in GitHub Secret vault. This will be public anyway.
 
-### `GITHUB_ORGANIZATION`
+### `GITHUB_ORGANIZATION` 
 
-**Optional** Github organization. defaults to DOCKER_ORGANIZATION. Example: `philips-software`
+**Optional** Github organization. Defaults to DOCKER_ORGANIZATION. Example: `philips-software` 
 No need to put this in GitHub Secret vault. This will be public anyway.
 
 In every docker container there are two files:
-- `TAGS` - contains all tags associated with this container at time it was build.
-- `REPO` - contains a link to the github repository with the commit sha..
+
+* `TAGS` - contains all tags associated with this container at time it was build.
+* `REPO` - contains a link to the github repository with the commit sha.
 
 ## Example usage
 
-```
-- uses: philips-software/docker-ci-scripts@v1.0.1
+``` 
+
+* uses: philips-software/docker-ci-scripts@v1.0.1
+
   with:
     dockerfile: '12'
     tags: 'node node:12 node:12.1 node 12.1.4'
@@ -75,10 +82,10 @@ In every docker container there are two files:
 
 ## Example projects
 
-- [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
-- [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
-- [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
-- [philips-software/docker-scala](https://github.com/philips-software/docker-scala)
+* [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
+* [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
+* [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
+* [philips-software/docker-scala](https://github.com/philips-software/docker-scala)
 
 ## Contributors
 
@@ -87,3 +94,4 @@ In every docker container there are two files:
 ## License
 
 [MIT License](./LICENSE)
+

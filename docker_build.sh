@@ -20,7 +20,7 @@ echo "--------------------------------------------------------------------------
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 if [ -z "$docker_organization" ]; then
-  echo "  No DOCKER_ORGANIZATION set. Please provde"
+  echo "  No DOCKER_ORGANIZATION set. Please provide"
   exit 1
 fi
 echo "Docker organization: $docker_organization"
@@ -59,13 +59,13 @@ echo "--------------------------------------------------------------------------
 echo "$alltags" > TAGS
 echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
 
-docker build . -t "$docker_organization"/"$basetag"
+docker build . -t "$DOCKER_REGISTRY"/"$docker_organization"/"$basetag"
 
 echo "--------------------------------------------------------------------------------------------"
 for tag in "${tags[@]:1}"
 do
-  echo "Tagging $docker_organization/$basetag as $docker_organization/$tag"
-  docker tag "$docker_organization"/"$basetag" "$docker_organization"/"$tag"
+  echo "Tagging $DOCKER_REGISTRY/$docker_organization/$basetag as $DOCKER_REGISTRY/$docker_organization/$tag"
+  docker tag "$DOCKER_REGISTRY"/"$docker_organization"/"$basetag" "$DOCKER_REGISTRY"/"$docker_organization"/"$tag"
 done
 echo "============================================================================================"
 echo "Finished building docker images: $builddir"
