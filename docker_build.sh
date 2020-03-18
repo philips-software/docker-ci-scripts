@@ -2,8 +2,6 @@
 
 set -e
 
-currentdir=$(pwd)
-
 cd "$(dirname "$0")"
 
 # Checking number of arguments
@@ -45,7 +43,7 @@ IFS=' '
 read -ra tags <<< "$alltags"
 basetag=${tags[0]}
 
-project=$(basename "$currentdir")
+project=$(basename $(git rev-parse --show-toplevel))
 
 commitsha=${GITHUB_SHA}
 if [ -z "$GITHUB_SHA" ]; then
@@ -58,7 +56,10 @@ cd "$builddir"
 echo "Building docker image: $builddir with name: $imagename/$basetag"
 echo "--------------------------------------------------------------------------------------------"
 
+echo "$alltags"
 echo "$alltags" > TAGS
+
+echo "https://github.com/$github_organization/$project/tree/$commitsha"
 echo "https://github.com/$github_organization/$project/tree/$commitsha" > REPO
 
 docker build . -t "$DOCKER_REGISTRY"/"$docker_organization"/"$imagename":"$basetag"
