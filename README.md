@@ -72,9 +72,7 @@ In every docker container there are two files:
 ## Example usage
 
 ``` 
-
-* uses: philips-software/docker-ci-scripts@v2
-
+- uses: philips-software/docker-ci-scripts@v2.0.1
   with:
     dockerfile: '12'
     image-name: 'node'
