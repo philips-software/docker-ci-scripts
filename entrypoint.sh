@@ -1,13 +1,15 @@
 #!/bin/sh -l
 
-echo "directory  : $1"
+echo "directory      : $1"
+echo "image name     : $2"
+echo "tags           : $3"
+echo "push branch    : $4"
+echo "docker registry: $5"
 
-echo "tags       : $2"
+export PUSH_BRANCH=$4
 
-echo "push branch: $3"
-
-export PUSH_BRANCH=$3
+export DOCKER_REGISTRY=$5
 
 cd /
-./docker_build_and_push.sh /github/workspace/"$1" "$2"
+./docker_build_and_push.sh /github/workspace/"$1" "$2" "$3"
 
