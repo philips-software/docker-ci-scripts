@@ -50,11 +50,7 @@ echo "--------------------------------------------------------------------------
 echo "Update readme"
 echo "--------------------------------------------------------------------------------------------"
 
-ls -l
-
 [ "$DOCKER_REGISTRY" = "docker.io" ] && ./update_readme.sh || echo "no docker.io so no update"
-
-head -15 README.md
 
 echo "============================================================================================"
 echo "Finished pushing docker images: $builddir"

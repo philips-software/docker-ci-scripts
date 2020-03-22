@@ -6,7 +6,7 @@
 set -e
 
 # Set the default path to README.md
-README_FILEPATH=${README_FILEPATH:="./README.md"}
+README_FILEPATH="/github/workspace/${README_FILEPATH:="README.md"}"
 
 # Acquire a token for the Docker Hub API
 echo "Acquiring token"
