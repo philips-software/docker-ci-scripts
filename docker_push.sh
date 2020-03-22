@@ -34,15 +34,24 @@ fi
 echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
- 
-echo "Pushing $DOCKER_REGISTRY/$docker_organization/$imagename:$basetag"
-docker push "$DOCKER_REGISTRY"/"$docker_organization"/"$imagename":"$basetag"
+
+export DOCKER_REPOSITORY="$docker_organization"/"$imagename"
+
+echo "Pushing $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$basetag"
+docker push "$DOCKER_REGISTRY"/"$DOCKER_REPOSITORY":"$basetag"
 
 for tag in "${tags[@]:1}"
 do
-  echo "Pushing $DOCKER_REGISTRY/$docker_organization/$imagename:$tag"
-  docker push "$DOCKER_REGISTRY"/"$docker_organization"/"$imagename":"$tag"
+  echo "Pushing $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$tag"
+  docker push "$DOCKER_REGISTRY"/"$DOCKER_REPOSITORY":"$tag"
 done
+echo "--------------------------------------------------------------------------------------------"
+
+echo "Update readme"
+echo "--------------------------------------------------------------------------------------------"
+
+[ "$DOCKER_REGISTRY" = "docker.io" ] && ./update_readme.sh || echo "no docker.io so no update"
+
 echo "============================================================================================"
 echo "Finished pushing docker images: $builddir"
 echo "============================================================================================"
