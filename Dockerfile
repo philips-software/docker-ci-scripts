@@ -16,8 +16,6 @@ LABEL "com.github.actions.description"="Builds docker images and publish master"
 LABEL "com.github.actions.icon"="terminal"
 LABEL "com.github.actions.color"="gray-dark"
 
-COPY LICENSE.md README.md /
-
 COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh /
 
 COPY entrypoint.sh /entrypoint.sh
