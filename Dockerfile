@@ -2,6 +2,9 @@ FROM docker:19.03.8-git
 
 RUN apk update && apk add \
     bash \
+    jq \
+    curl \
+    wget \
     git
 
 LABEL "name"="docker-build"
