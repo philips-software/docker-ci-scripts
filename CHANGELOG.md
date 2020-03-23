@@ -6,6 +6,9 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+### Add
+- [#28] - Update readme on docker.io
+
 ## [v2.0.1] - 2020-03-18
 
 ### Changed
@@ -36,6 +39,7 @@ and this project uses the version of main tool as main version number .
 * [#1] - Custom DOCKER_ORGANIZATION and GITHUB_ORGANIZATION.
 * Initial start
 
+[#28]: https://github.com/philips-software/docker-ci-scripts/issues/28
 [#26]: https://github.com/philips-software/docker-ci-scripts/issues/26
 [#21]: https://github.com/philips-software/docker-ci-scripts/issues/21
 [#17]: https://github.com/philips-software/docker-ci-scripts/issues/17
