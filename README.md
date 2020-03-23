@@ -5,11 +5,12 @@
 [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
 
 This action will build a docker container from a given directory. 
+</div>
+
 - You can give the docker container multiple tags.
 - You can specify for which branch it should push it a docker registry ( `docker.io` by default ). 
 - Each docker container contains information about the exact context in which the container is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
-</div>
 
 ## Contents
 
