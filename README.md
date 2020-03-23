@@ -4,11 +4,11 @@
 
 [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
 
-This action will build a docker container from a given directory. You can give the docker container multiple tags.
-
-You can specify for which branch it should also push it to docker hub. Default branch is `master` 
-
-Each docker container contains information about the exact context in which the container is build.
+This action will build a docker container from a given directory. 
+- You can give the docker container multiple tags.
+- You can specify for which branch it should push it a docker registry ( `docker.io` by default ). 
+- Each docker container contains information about the exact context in which the container is build.
+- When pushing to docker.io, the description is updated with the `readme.md` file.
 </div>
 
 ## Contents
@@ -44,11 +44,11 @@ These variables can be set in the github repository secret vault.
 
 ### `DOCKER_USERNAME` 
 
-**Required** Docker hub username
+**Required** Docker username
 
 ### `DOCKER_PASSWORD` 
 
-**Required**  Docker hub password
+**Required**  Docker password
 
 ### `DOCKER_REGISTRY` 
 
@@ -72,7 +72,7 @@ In every docker container there are two files:
 ## Example usage
 
 ``` 
-- uses: philips-software/docker-ci-scripts@v2.0.1
+- uses: philips-software/docker-ci-scripts@v2.1.0
   with:
     dockerfile: '12'
     image-name: 'node'
