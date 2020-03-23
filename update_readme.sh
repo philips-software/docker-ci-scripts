@@ -24,4 +24,5 @@ if [ "$RESPONSE_CODE" -eq 200 ]; then
   echo "Readme updated successfully"
 else
   echo "Error updating readme"
+  exit 1
 fi
