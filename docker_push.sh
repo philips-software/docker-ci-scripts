@@ -7,6 +7,20 @@ cd "$(dirname "$0")"
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
+if [ -z "$DOCKER_REGISTRY" ]; then
+  if [ -z "$docker_organization" ]; then
+    echo "  No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
+    exit 1
+  fi
+  DOCKER_REGISTRY="docker.io"
+  docker_registry_prefix="$DOCKER_REGISTRY/$docker_organization"
+  echo "Docker organization: $docker_organization"
+else
+  docker_registry_prefix="$DOCKER_REGISTRY"
+fi
+
+echo "docker_registry_prefix: $docker_registry_prefix"
+
 if [ "$#" -lt 3 ]; then
   echo "You need to provide a directory with a Dockerfile in it, Docker image name and a tag."
   exit 1
@@ -35,15 +49,13 @@ echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
 
-export DOCKER_REPOSITORY="$docker_organization"/"$imagename"
-
-echo "Pushing $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$basetag"
-docker push "$DOCKER_REGISTRY"/"$DOCKER_REPOSITORY":"$basetag"
+echo "Pushing $docker_registry_prefix/$imagename:$basetag"
+docker push "$docker_registry_prefix"/"$imagename":"$basetag"
 
 for tag in "${tags[@]:1}"
 do
-  echo "Pushing $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$tag"
-  docker push "$DOCKER_REGISTRY"/"$DOCKER_REPOSITORY":"$tag"
+  echo "Pushing $docker_registry_prefix/$imagename:$tag"
+  docker push "$docker_registry_prefix"/"$imagename":"$tag"
 done
 echo "--------------------------------------------------------------------------------------------"
 

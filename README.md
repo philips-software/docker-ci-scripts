@@ -57,7 +57,7 @@ These variables can be set in the github repository secret vault.
 
 ### `DOCKER_ORGANIZATION` 
 
-**Required** Container will be pushed in this organization. Example: `philipssoftware` 
+**Required for Docker hub** Container will be pushed in this organization. Example: `philipssoftware`
 No need to put this in GitHub Secret vault. This will be public anyway.
 
 ### `GITHUB_ORGANIZATION` 

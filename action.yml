@@ -18,10 +18,6 @@ inputs:
     description: 'Specifies branch to push'
     required: true
     default: 'master'
-  docker-registry:
-    description: 'The docker registry to push the image to'
-    required: true
-    default: 'docker.io'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -30,4 +26,3 @@ runs:
     - ${{ inputs.image-name }}
     - ${{ inputs.tags }}
     - ${{ inputs.push-branch }}
-    - ${{ inputs.docker-registry }}
