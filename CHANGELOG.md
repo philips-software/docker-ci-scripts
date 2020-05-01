@@ -6,6 +6,9 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+### Changed
+- Fix shellinter
+
 ### Add
 - [#28] - Update readme on docker.io
 
