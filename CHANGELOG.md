@@ -7,6 +7,8 @@ and this project uses the version of main tool as main version number .
 ## [Unreleased]
 
 ### Changed
+- [#33] - DOCKER_ORGANIZATION is optional when other repository store is used.
+- [#32] - DOCKER_REGISTRY should be an environment variable. 
 - Fix shellinter
 
 ### Add
