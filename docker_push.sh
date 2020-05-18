@@ -62,6 +62,7 @@ echo "--------------------------------------------------------------------------
 echo "Update readme"
 echo "--------------------------------------------------------------------------------------------"
 
+export DOCKER_REPOSITORY="$docker_organization"/"$imagename"
 [ "$DOCKER_REGISTRY" = "docker.io" ] && ./update_readme.sh || echo "no docker.io so no update"
 
 echo "============================================================================================"

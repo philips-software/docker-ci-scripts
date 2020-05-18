@@ -6,7 +6,11 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+## v2.2.1 - 2020-05-18
 ### Changed
+- [#38] - Auto update readme was not working anymore 
+
+## v2.2.0
 - [#33] - DOCKER_ORGANIZATION is optional when other repository store is used.
 - [#32] - DOCKER_REGISTRY should be an environment variable. 
 - Fix shellinter
@@ -44,6 +48,7 @@ and this project uses the version of main tool as main version number .
 * [#1] - Custom DOCKER_ORGANIZATION and GITHUB_ORGANIZATION.
 * Initial start
 
+[#38]: https://github.com/philips-software/docker-ci-scripts/issues/38
 [#28]: https://github.com/philips-software/docker-ci-scripts/issues/28
 [#26]: https://github.com/philips-software/docker-ci-scripts/issues/26
 [#21]: https://github.com/philips-software/docker-ci-scripts/issues/21
