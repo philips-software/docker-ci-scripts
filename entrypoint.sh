@@ -7,6 +7,4 @@ echo "push branch    : $4"
 
 export PUSH_BRANCH=$4
 
-cd /
-./docker_build_and_push.sh /github/workspace/"$1" "$2" "$3"
-
+./docker_build_and_push.sh "$1" "$2" "$3"
