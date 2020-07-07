@@ -7,4 +7,4 @@ echo "push branch    : $4"
 
 export PUSH_BRANCH=$4
 
-./docker_build_and_push.sh "$1" "$2" "$3"
+${FOREST_DIR}/docker_build_and_push.sh "$1" "$2" "$3"

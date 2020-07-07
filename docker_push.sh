@@ -2,8 +2,6 @@
 
 set -e
 
-cd "$(dirname "$0")"
-
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
@@ -32,7 +30,7 @@ imagename=$1
 shift
 alltags=$*
 IFS=' '
-read -ra tags <<< "$alltags"
+read -ra tags <<<"$alltags"
 basetag=${tags[0]}
 
 if [ -z "$DOCKER_PASSWORD" ]; then
@@ -52,8 +50,7 @@ echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" 
 echo "Pushing $docker_registry_prefix/$imagename:$basetag"
 docker push "$docker_registry_prefix"/"$imagename":"$basetag"
 
-for tag in "${tags[@]:1}"
-do
+for tag in "${tags[@]:1}"; do
   echo "Pushing $docker_registry_prefix/$imagename:$tag"
   docker push "$docker_registry_prefix"/"$imagename":"$tag"
 done
