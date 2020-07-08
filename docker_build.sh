@@ -2,8 +2,6 @@
 
 set -e
 
-cd "$(dirname "$0")"
-
 # Checking number of arguments
 
 if [ "$#" -lt 3 ]; then
@@ -11,7 +9,7 @@ if [ "$#" -lt 3 ]; then
   exit 1
 fi
 
-# Checking DOCKER_ORGANIZATION environment variable 
+# Checking DOCKER_ORGANIZATION environment variable
 
 echo "--------------------------------------------------------------------------------------------"
 
@@ -31,7 +29,6 @@ fi
 
 echo "docker_registry_prefix: $docker_registry_prefix"
 
-
 # Checking GITHUB_ORGANIZATION environment variable
 
 # shellcheck disable=SC2153
@@ -49,7 +46,7 @@ imagename=$1
 shift
 alltags=$*
 IFS=' '
-read -ra tags <<< "$alltags"
+read -ra tags <<<"$alltags"
 basetag=${tags[0]}
 
 project=${GITHUB_REPOSITORY}
@@ -66,16 +63,15 @@ echo "Building docker image: $builddir with name: $imagename/$basetag"
 echo "--------------------------------------------------------------------------------------------"
 
 echo "tags: $alltags"
-echo "$alltags" > TAGS
+echo "$alltags" >TAGS
 
 echo "repo: https://github.com/$project/tree/$commitsha"
-echo "https://github.com/$project/tree/$commitsha" > REPO
+echo "https://github.com/$project/tree/$commitsha" >REPO
 
 docker build . -t "$docker_registry_prefix"/"$imagename":"$basetag"
 
 echo "--------------------------------------------------------------------------------------------"
-for tag in "${tags[@]:1}"
-do
+for tag in "${tags[@]:1}"; do
   echo "Tagging $docker_registry_prefix/$imagename:$basetag as $docker_registry_prefix/$imagename:$tag"
   docker tag "$docker_registry_prefix"/"$imagename":"$basetag" "$docker_registry_prefix"/"$imagename":"$tag"
 done

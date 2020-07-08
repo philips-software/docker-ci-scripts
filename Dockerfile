@@ -16,9 +16,11 @@ LABEL "com.github.actions.description"="Builds docker images and publish master"
 LABEL "com.github.actions.icon"="terminal"
 LABEL "com.github.actions.color"="gray-dark"
 
-COPY LICENSE.md README.md /
+ENV FOREST_DIR=/forest
+RUN mkdir -p ${FOREST_DIR}
 
-COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh /
+COPY LICENSE.md README.md ${FOREST_DIR}/
+COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh ${FOREST_DIR}/
+COPY entrypoint.sh /
 
-COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
