@@ -25,7 +25,7 @@ This action will build a docker container from a given directory.
 
 ### `dockerfile` 
 
-**Required** Path to Dockerfile. Example: `12` 
+**Required** Path to Dockerfile. Example: `./docker/Dockerfile` 
 
 ### `image-name` 
 
@@ -75,7 +75,7 @@ In every docker container there are two files:
 ``` 
 - uses: philips-software/docker-ci-scripts@v2.2.2
   with:
-    dockerfile: '12'
+    dockerfile: './docker/Dockerfile'
     image-name: 'node'
     tags: 'latest 12 12.1 12.1.4'
   env:

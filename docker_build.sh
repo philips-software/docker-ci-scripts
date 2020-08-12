@@ -40,7 +40,7 @@ fi
 echo "Github organization: $github_organization"
 echo "--------------------------------------------------------------------------------------------"
 
-builddir=$1
+dockerfilepath=$1
 shift
 imagename=$1
 shift
@@ -57,9 +57,7 @@ if [ -z "$GITHUB_SHA" ]; then
   commitsha=$(git rev-parse --verify HEAD)
 fi
 
-cd "$builddir"
-
-echo "Building docker image: $builddir with name: $imagename/$basetag"
+echo "Building docker image from: $dockerfilepath with name: $imagename/$basetag"
 echo "--------------------------------------------------------------------------------------------"
 
 echo "tags: $alltags"
@@ -68,7 +66,7 @@ echo "$alltags" >TAGS
 echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
 
-docker build . -t "$docker_registry_prefix"/"$imagename":"$basetag"
+docker build . -f $(dockerfilepath) -t "$docker_registry_prefix"/"$imagename":"$basetag"
 
 echo "--------------------------------------------------------------------------------------------"
 for tag in "${tags[@]:1}"; do
@@ -76,5 +74,5 @@ for tag in "${tags[@]:1}"; do
   docker tag "$docker_registry_prefix"/"$imagename":"$basetag" "$docker_registry_prefix"/"$imagename":"$tag"
 done
 echo "============================================================================================"
-echo "Finished building docker images: $builddir"
+echo "Finished building docker images from: $dockerfilepath"
 echo "============================================================================================"
