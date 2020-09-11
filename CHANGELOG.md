@@ -6,6 +6,10 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+## v2.2.2 - 2020-09-11
+### Changed
+- Allow users to specify specific dockerfile instead of path
+
 ## v2.2.1 - 2020-05-18
 ### Changed
 - [#38] - Auto update readme was not working anymore 
