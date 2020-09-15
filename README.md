@@ -78,7 +78,7 @@ In every docker container there are two files:
 ## Example usage
 
 ``` 
-- uses: philips-software/docker-ci-scripts@v2.3.0
+- uses: philips-software/docker-ci-scripts@v3.0.0
   with:
     dockerfile: './docker/Dockerfile'
     image-name: 'node'
@@ -95,6 +95,20 @@ In every docker container there are two files:
 * [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
 * [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
 * [philips-software/docker-scala](https://github.com/philips-software/docker-scala)
+
+## Breaking changes v3.0.0
+
+The `docker build` command is now being called from the root of the project
+instead of the directory. 
+
+This has impact when your project has these two things:
+- Directories with dockerfiles
+- The dockerfile contains an `ADD` or a `COPY` command.
+
+You now need to change the path to include the directory.
+
+Example:
+- `ADD /scripts/entrypoint.sh entrypoint.sh` becomes: `ADD /6/java/scripts/entrypoint.sh entrypoint` 
 
 ## Contributors
 

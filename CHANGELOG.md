@@ -6,9 +6,22 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
-## v2.2.2 - 2020-09-11
-### Changed
+## v3.0.0 - 2020-09-15
+
+### BREAKING
 - Allow users to specify specific dockerfile instead of path
+
+The `docker build` command is now being called from the root of the project
+instead of the directory. 
+
+This has impact when your project has:
+- Directories with multiple dockerfiles
+- The dockerfile contains an `ADD` or a `COPY` command.
+
+You now need to change the path to include the directory.
+
+Example:
+- `ADD /scripts/entrypoint.sh entrypoint.sh` becomes: `ADD /6/java/scripts/entrypoint.sh entrypoint` 
 
 ## v2.2.1 - 2020-05-18
 ### Changed
