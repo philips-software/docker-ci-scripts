@@ -40,9 +40,9 @@ This action will build a docker container from a given directory.
 
 **Required** String with tags, separated by a space. Example: `latest 12 12.1` 
 
-### `push-branch` 
+### `push-branches` 
 
-**Optional** Specifies branch to push. Defaults to `master` 
+**Optional** Specifies branches to push, separated by a space. Defaults to `master`
 
 ## Environment variables
 
