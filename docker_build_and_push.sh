@@ -15,6 +15,7 @@ fi
 "${FOREST_DIR}"/docker_build.sh "$@"
 
 echo "Check if we need to push the docker images to docker hub:"
+# shellcheck disable=SC2153
 echo "Push branches: $PUSH_BRANCHES"
 echo "GITHUB_REF: $GITHUB_REF"
 
