@@ -6,6 +6,7 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- [#50] - Fix: Automatic push of README to docker hub is broken.
 - [#48] - Loop through entire array of push-branches
 
 ## v3.1.0 - 2020-09-23
@@ -73,6 +74,7 @@ Example:
 * [#1] - Custom DOCKER_ORGANIZATION and GITHUB_ORGANIZATION.
 * Initial start
 
+[#50]: https://github.com/philips-software/docker-ci-scripts/issues/50
 [#48]: https://github.com/philips-software/docker-ci-scripts/issues/48
 [#47]: https://github.com/philips-software/docker-ci-scripts/pull/47
 [#38]: https://github.com/philips-software/docker-ci-scripts/issues/38
