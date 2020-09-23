@@ -15,8 +15,9 @@ inputs:
     description: 'String with tags, separated by a space'
     required: true
   push-branch:
-    description: 'Specifies branch to push'
-    required: true
+    description: 'Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches'
+  push-branches:
+    description: 'Specifies branches to push, separated by a space'
     default: 'master'
 runs:
   using: 'docker'
@@ -25,4 +26,5 @@ runs:
     - ${{ inputs.dockerfile }}
     - ${{ inputs.image-name }}
     - ${{ inputs.tags }}
+    - ${{ inputs.push-branches }}
     - ${{ inputs.push-branch }}
