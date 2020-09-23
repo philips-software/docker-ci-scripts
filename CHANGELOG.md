@@ -6,6 +6,8 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- [#48] - Loop through entire array of push-branches
+
 ## v3.1.0 - 2020-09-23
 - Allow users to specify multiple branches to push to the artifact repository. `push-branches`
 
@@ -71,6 +73,7 @@ Example:
 * [#1] - Custom DOCKER_ORGANIZATION and GITHUB_ORGANIZATION.
 * Initial start
 
+[#48]: https://github.com/philips-software/docker-ci-scripts/issues/48
 [#47]: https://github.com/philips-software/docker-ci-scripts/pull/47
 [#38]: https://github.com/philips-software/docker-ci-scripts/issues/38
 [#28]: https://github.com/philips-software/docker-ci-scripts/issues/28
