@@ -78,6 +78,7 @@ function getProjectAndCommitSHA {
   project=${GITHUB_REPOSITORY}
   if [ -z "$GITHUB_REPOSITORY" ]; then
     warn "No GITHUB_REPOSITORY, so I will get it from the remote."
+    # shellcheck disable=SC2016 
     project=$(git remote show origin -n | ruby -ne 'puts /^\s*Fetch.*:(.*).git/.match($_)[1] rescue nil')
   fi
 
