@@ -9,4 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.3
       - name: Run tests
-        run: bats tests 
+        run: |
+          export TERM=xterm-256color
+          bats tests
