@@ -57,7 +57,8 @@ function checkGitHubOrganization {
 
 function getDockerFile {
   export dockerfile=$1
-  export dockerfilepath=$(expandDockerfile "$dockerfile")
+  dockerfilepath=$(expandDockerfile "$dockerfile")
+  export dockerfilepath
 }
 
 function getImageName {
@@ -77,7 +78,7 @@ function getProjectAndCommitSHA {
   project=${GITHUB_REPOSITORY}
   if [ -z "$GITHUB_REPOSITORY" ]; then
     warn "No GITHUB_REPOSITORY, so I will get it from the remote."
-    project=`git remote show origin -n | ruby -ne 'puts /^\s*Fetch.*:(.*).git/.match($_)[1] rescue nil'`
+    project=$(git remote show origin -n | ruby -ne 'puts /^\s*Fetch.*:(.*).git/.match($_)[1] rescue nil')
   fi
 
   info "project: $project"
