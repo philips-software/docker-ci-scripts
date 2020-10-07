@@ -4,11 +4,11 @@
 
 set -e
 
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-BLUE=`tput setaf 4`
-RESET=`tput sgr0`
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+RESET=$(tput sgr0)
 
 function big() {
     set +e
@@ -16,7 +16,7 @@ function big() {
     if [ $? -eq 1 ]; then
         echo >&2 "$1"
     else
-        figlet -f small $1
+        figlet -f small "$1"
     fi
     set -e
 }

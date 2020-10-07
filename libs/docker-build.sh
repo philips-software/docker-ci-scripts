@@ -23,7 +23,7 @@ function checkDockerOrganization {
   delimiter
 
   # shellcheck disable=SC2153
-  docker_organization=$DOCKER_ORGANIZATION
+  export docker_organization=$DOCKER_ORGANIZATION
 
   if [ -z "$DOCKER_REGISTRY" ]; then
     if [ -z "$docker_organization" ]; then
@@ -37,6 +37,8 @@ function checkDockerOrganization {
   fi
 
   info "docker_registry_prefix: $docker_registry_prefix"
+
+  export docker_registry_prefix
 }
 
 function checkGitHubOrganization {
@@ -49,25 +51,26 @@ function checkGitHubOrganization {
   fi
   info "Github organization: $github_organization"
   delimiter 
+
+  export github_organization
 }
 
 function getDockerFile {
-  dockerfile=$1
-
-  dockerfilepath=$(expandDockerfile "$dockerfile")
+  export dockerfile=$1
+  export dockerfilepath=$(expandDockerfile "$dockerfile")
 }
 
 function getImageName {
-  imagename=$2
+  export imagename=$2
 }
 
 function getAllTags {
   shift
   shift
-  alltags=$*
+  export alltags=$*
   IFS=' '
   read -ra tags <<<"$alltags"
-  basetag=${tags[0]}
+  export basetag=${tags[0]}
 }
 
 function getProjectAndCommitSHA {
@@ -79,11 +82,15 @@ function getProjectAndCommitSHA {
 
   info "project: $project"
 
+  export project
+
   commitsha=${GITHUB_SHA}
   if [ -z "$GITHUB_SHA" ]; then
     warn "No GITHUB_SHA set. Try to get it myself with git."
     commitsha=$(git rev-parse --verify HEAD)
   fi
+
+  export commitsha
 }
 
 function createTagsFile {
