@@ -1,0 +1,12 @@
+name: Run tests 
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    container: philipssoftware/bats
+    steps:
+      - uses: actions/checkout@v2.3.3
+      - name: Run tests
+        run: bats tests 
