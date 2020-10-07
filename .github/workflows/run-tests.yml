@@ -5,7 +5,7 @@ on: [push]
 jobs:
   tests:
     runs-on: ubuntu-latest
-    container: philipssoftware/bats
+    container: philipssoftware/bats:0.4.0
     steps:
       - uses: actions/checkout@v2.3.3
       - name: Run tests
