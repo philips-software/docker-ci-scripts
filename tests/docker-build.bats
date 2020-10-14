@@ -2,6 +2,8 @@
 
 source ./libs/docker-build.sh
 source ./libs/messages.sh
+
+# test-helpers
 source ./tests/common/helpers.sh
 
 @test "correct number of checkArguments" {

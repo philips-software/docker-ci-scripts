@@ -2,15 +2,18 @@
 
 source ./libs/messages.sh
 
+# test-helpers
+source ./tests/common/helpers.sh
+
 @test "info" {
   run info 'my text'
-  [ "$status" -eq 0 ]
+  assert_success
   [ "$output" = "   INFO:    `tput setaf 3`my text`tput sgr0`" ]
 }
 
 @test "success" {
   run success 'my text'
-  [ "$status" -eq 0 ]
+  assert_success
 
   [ "${lines[0]}" = "   SUCCESS: `tput setaf 2`my text`tput sgr0`" ]
   [ "${lines[1]}" = "   =====================================================================================" ]
@@ -18,13 +21,13 @@ source ./libs/messages.sh
 
 @test "error" {
   run error 'my text'
-  [ "$status" -eq 1 ]
+  assert_failure
   [ "$output" = "   ERROR:   `tput setaf 1`my text`tput sgr0`" ]
 }
 
 @test "warn" {
   run warn 'my text'
-  [ "$status" -eq 0 ]
+  assert_success
   [ "$output" = "   WARN:    `tput setaf 4`my text`tput sgr0`" ]
 }
 
@@ -60,6 +63,6 @@ EOM
 
 @test "delimiter" {
   run delimiter 
-  [ "$status" -eq 0 ]
+  assert_success
   [ "$output" = "   -------------------------------------------------------------------------------------" ]
 }
