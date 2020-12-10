@@ -20,12 +20,13 @@ echo "Push branches: $PUSH_BRANCHES"
 echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
 echo "GITHUB_REF: $GITHUB_REF"
 echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
+echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
 
 read -ra push_branches <<< "$PUSH_BRANCHES"
 
 for branch in "${push_branches[@]}"; do
   if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
-    if [[ "$GITHUB_HEAD_REF" = "$branch" ]]; then
+    if [[ "$GITHUB_BASE_REF" = "$branch" ]]; then
       echo "Matches: start pushing"
       "${FOREST_DIR}"/docker_push.sh "$@"
       exit 0
