@@ -18,7 +18,7 @@ inputs:
     description: 'Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches'
   push-branches:
     description: 'Specifies branches to push, separated by a space'
-    default: 'master'
+    default: 'master main'
 runs:
   using: 'docker'
   image: 'Dockerfile'
