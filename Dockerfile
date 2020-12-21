@@ -1,4 +1,4 @@
-FROM docker:19.03.14-git
+FROM docker:20.10.1-git
 
 RUN apk update && apk add \
     bash \
