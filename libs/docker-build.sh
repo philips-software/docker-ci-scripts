@@ -22,8 +22,7 @@ function checkDockerOrganization {
   # Checking DOCKER_ORGANIZATION environment variable
   delimiter
 
-  # shellcheck disable=SC2153
-  export docker_organization=$DOCKER_ORGANIZATION
+  docker_organization=$DOCKER_ORGANIZATION
 
   if [ -z "$DOCKER_REGISTRY" ]; then
     if [ -z "$docker_organization" ]; then
@@ -39,6 +38,7 @@ function checkDockerOrganization {
   info "docker_registry_prefix: $docker_registry_prefix"
 
   export docker_registry_prefix
+  export docker_organizatoin
 }
 
 function checkGitHubOrganization {

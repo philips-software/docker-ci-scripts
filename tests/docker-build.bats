@@ -14,7 +14,7 @@ source ./tests/common/helpers.sh
 @test "incorrect number of checkArguments" {
   run checkArguments arg1 arg2
   assert_failure
-  [ "$output" = $(error "You need to provide a directory with a Dockerfile in it, Docker image name and one or more tags.") ]
+  assert_equal $output $(error "You need to provide a directory with a Dockerfile in it, Docker image name and one or more tags.")
 }
 
 @test "check setting of environment variables when using docker.io" {
@@ -24,7 +24,6 @@ source ./tests/common/helpers.sh
   [ "${lines[0]}" = $(delimiter) ]
   [ "${lines[1]}" = $(info "Docker organization: test") ]
   [ "${lines[2]}" = $(info "docker_registry_prefix: docker.io/test") ]
-  # TODO: test environment variables : docker organization and docker registry_prefix
 }
 
 @test "check setting of environment variables when using docker.io - missing organization" {
