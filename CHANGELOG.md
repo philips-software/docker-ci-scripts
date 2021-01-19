@@ -6,6 +6,9 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- Update version of docker to docker:20.10.2-git
+
+## v3.2.0
 - [#50] - Fix: Automatic push of README to docker hub is broken.
 - [#48] - Loop through entire array of push-branches
 
