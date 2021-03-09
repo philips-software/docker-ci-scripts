@@ -14,35 +14,18 @@ This action will build a docker container from a given directory.
 
 ## Contents
 
+* [Description](#description)
 * [Inputs](#inputs)
 * [Environment Variables](#environment-variables)
+* [Outputs](#outputs)
+* [Runs](#runs)
 * [Example Usage](#example-usage)
 * [Example Projects](#example-projects)
 * [Contributors](#contributors)
 * [License](#license)
 
-## Inputs
-
-### `dockerfile` 
-
-**Required** Path to Dockerfile or to the path of the Dockerfile.
-
-|type  | value                                |
-|------|--------------------------------------|
-| File | `./docker/Dockerfile.specialversion` |
-| Path | `/docker`                            |
-
-### `image-name` 
-
-**Required** Name of the Docker image. Example: `node` 
-
-### `tags` 
-
-**Required** String with tags, separated by a space. Example: `latest 12 12.1` 
-
-### `push-branches` 
-
-**Optional** Specifies branches to push, separated by a space. Defaults to `master`
+<!-- action-docs-description -->
+<!-- action-docs-inputs -->
 
 ## Environment variables
 
@@ -74,6 +57,9 @@ In every docker container there are two files:
 
 * `TAGS` - contains all tags associated with this container at time it was build.
 * `REPO` - contains a link to the github repository with the commit sha.
+
+<!-- action-docs-outputs -->
+<!-- action-docs-runs -->
 
 ## Example usage
 
