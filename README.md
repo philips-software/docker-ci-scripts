@@ -25,6 +25,25 @@ This action will build a docker container from a given directory.
 * [License](#license)
 
 <!-- action-docs-description -->
+## Description
+
+Builds docker images and publish master
+
+
+<!-- action-docs-description -->
+<!-- action-docs-inputs -->
+## Inputs
+
+| parameter | description | required | default |
+| - | - | - | - |
+| dockerfile | Path to Dockerfile | `true` |  |
+| image-name | The name of the Docker image | `true` |  |
+| tags | String with tags, separated by a space | `true` |  |
+| push-branch | Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches | `false` |  |
+| push-branches | Specifies branches to push, separated by a space | `false` | master main |
+
+
+
 <!-- action-docs-inputs -->
 
 ## Environment variables
@@ -59,6 +78,14 @@ In every docker container there are two files:
 * `REPO` - contains a link to the github repository with the commit sha.
 
 <!-- action-docs-outputs -->
+
+<!-- action-docs-outputs -->
+<!-- action-docs-runs -->
+## Runs
+
+This action is an `docker` action.
+
+
 <!-- action-docs-runs -->
 
 ## Example usage
