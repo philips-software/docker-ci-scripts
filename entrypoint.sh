@@ -15,4 +15,4 @@ if [ -z "$6" ]
     export PUSH_BRANCHES="$6"
 fi
 
-"${FOREST_DIR}"/docker_build_and_push.sh "$1" "$2" "$3" "$5"
+"${FOREST_DIR}"/docker_build_and_push.sh "$1" "$2" "$5" "$3"

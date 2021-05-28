@@ -11,7 +11,7 @@ function expandDockerfile {
 # Checking number of arguments
 
 if [ "$#" -lt 4 ]; then
-  echo "You need to provide a directory with a Dockerfile in it, Docker image name, one or more tags and the base-dir."
+  echo "You need to provide a directory with a Dockerfile in it, Docker image name, the base-dir and one or more tags."
   exit 1
 fi
 
@@ -46,21 +46,24 @@ fi
 echo "Github organization: $github_organization"
 echo "--------------------------------------------------------------------------------------------"
 
-echo "Switching to $4"
-echo "--------------------------------------------------------------------------------------------"
-cd $4
 
 dockerfile=$1
-
-dockerfilepath=$(expandDockerfile "$dockerfile")
-
 shift
 imagename=$1
 shift
+basedir=$1
+shift
 alltags=$*
+
 IFS=' '
 read -ra tags <<<"$alltags"
 basetag=${tags[0]}
+
+echo "Switching to $basedir"
+echo "--------------------------------------------------------------------------------------------"
+cd $basedir
+
+dockerfilepath=$(expandDockerfile "$dockerfile")
 
 project=${GITHUB_REPOSITORY}
 
