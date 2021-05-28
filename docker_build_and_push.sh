@@ -4,10 +4,10 @@ set -e
 
 help() {
   echo "This script requires three arguments, directory with the Docker file, Docker image name and the Docker tag."
-  echo "Usages: $(basename "$0") <docker-file-directory> <docker-image-name> <tag>"
+  echo "Usages: $(basename "$0") <docker-file-directory> <docker-image-name> <tag> <base-dir>"
 }
 
-if [ "$#" -lt 3 ]; then
+if [ "$#" -lt 4 ]; then
   help
   exit 1
 fi

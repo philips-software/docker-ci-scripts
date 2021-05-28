@@ -10,8 +10,8 @@ function expandDockerfile {
 
 # Checking number of arguments
 
-if [ "$#" -lt 3 ]; then
-  echo "You need to provide a directory with a Dockerfile in it, Docker image name and one or more tags."
+if [ "$#" -lt 4 ]; then
+  echo "You need to provide a directory with a Dockerfile in it, Docker image name, one or more tags and the base-dir."
   exit 1
 fi
 
@@ -45,6 +45,10 @@ if [ -z "$github_organization" ]; then
 fi
 echo "Github organization: $github_organization"
 echo "--------------------------------------------------------------------------------------------"
+
+echo "Switching to $4"
+echo "--------------------------------------------------------------------------------------------"
+cd $4
 
 dockerfile=$1
 
