@@ -61,7 +61,7 @@ basetag=${tags[0]}
 
 echo "Switching to $basedir"
 echo "--------------------------------------------------------------------------------------------"
-cd $basedir
+cd "$basedir"
 
 dockerfilepath=$(expandDockerfile "$dockerfile")
 
