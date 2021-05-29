@@ -41,6 +41,7 @@ Builds docker images and publish master
 | tags | String with tags, separated by a space | `true` |  |
 | push-branch | Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches | `false` |  |
 | push-branches | Specifies branches to push, separated by a space | `false` | master main |
+| base-dir | Base directory to perform the docker build | `false` | . |
 
 
 
