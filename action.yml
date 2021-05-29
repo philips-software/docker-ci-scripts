@@ -19,6 +19,9 @@ inputs:
   push-branches:
     description: 'Specifies branches to push, separated by a space'
     default: 'master main'
+  base-dir:
+    description: 'Base directory to perform the docker build'
+    default: '.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -27,4 +30,5 @@ runs:
     - ${{ inputs.image-name }}
     - ${{ inputs.tags }}
     - ${{ inputs.push-branches }}
+    - ${{ inputs.base-dir }}
     - ${{ inputs.push-branch }}
