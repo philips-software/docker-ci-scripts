@@ -19,14 +19,16 @@ fi
 
 echo "docker_registry_prefix: $docker_registry_prefix"
 
-if [ "$#" -lt 3 ]; then
-  echo "You need to provide a directory with a Dockerfile in it, Docker image name and a tag."
+if [ "$#" -lt 4 ]; then
+  echo "You need to provide a directory with a Dockerfile in it, Docker image name, base-dir and a tag."
   exit 1
 fi
 
 builddir=$1
 shift
 imagename=$1
+shift
+basedir=$1
 shift
 alltags=$*
 IFS=' '
