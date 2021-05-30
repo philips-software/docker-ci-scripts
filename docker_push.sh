@@ -28,7 +28,7 @@ builddir=$1
 shift
 imagename=$1
 shift
-basedir=$1
+# basedir=$1 // Is not used, so why bother to capture this in a variable.
 shift
 alltags=$*
 IFS=' '
