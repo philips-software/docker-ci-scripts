@@ -103,6 +103,23 @@ This action is an `docker` action.
     DOCKER_ORGANIZATION: myDockerOrganization
 ```
 
+#### With GitHub Package registry:
+
+```
+      - name: Build Docker Images
+        uses: philips-software/docker-ci-scripts@v3.3.2
+        with:
+          dockerfile: .
+          image-name: image-name-here
+          tags: latest 0.1
+          push-branches: main develop
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_REGISTRY: ghcr.io/philips-software
+          GITHUB_ORGANIZATION: philips-software
+```
+
 ## Example projects
 
 * [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
