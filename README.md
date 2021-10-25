@@ -116,8 +116,8 @@ This action is an `docker` action.
         env:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY: ghcr.io/philips-software
-          GITHUB_ORGANIZATION: philips-software
+          DOCKER_REGISTRY: ghcr.io/organization-here
+          GITHUB_ORGANIZATION: organization-here
 ```
 
 ## Example projects
