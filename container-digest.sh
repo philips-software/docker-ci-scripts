@@ -44,13 +44,20 @@ echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
 
-echo "Getting digest for $docker_registry_prefix/$imagename:$basetag"
 docker pull "$docker_registry_prefix"/"$imagename":"$basetag"
+
+echo "Getting digest for $docker_registry_prefix/$imagename:$basetag"
 containerdigest=`docker inspect "$docker_registry_prefix"/"$imagename":"$basetag" --format '{{ index .RepoDigests 0 }}' | cut -d '@' -f 2`
+echo "found: ${containerdigest}"
+echo "::set-output name=container-digest::${containerdigest}"
 
 echo "--------------------------------------------------------------------------------------------"
-echo "::set-output name=container_digest::${containerdigest}"
+
+echo "Getting tags"
+containertags=`docker inspect "$docker_registry_prefix"/"$imagename":"$basetag" --format '{{ join .RepoTags "\n" }}' | sed 's/.*://' | paste -s -d ',' -`
+echo "found: ${containertags}"
+echo "::set-output name=container-tags::${containertags}"
 
 echo "============================================================================================"
-echo "Finished getting docker digest"
+echo "Finished getting docker digest and tags"
 echo "============================================================================================"

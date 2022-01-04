@@ -24,7 +24,9 @@ inputs:
     default: '.'
 outputs:
   container-digest:
-    description: 'Container Digest'
+    description: 'Container digest. Can be used for generating provenance and signing.'
+  container-tags:
+    description: 'Container tags. Can be used for generating provenance and signing.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
