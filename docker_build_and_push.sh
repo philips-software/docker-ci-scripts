@@ -25,7 +25,7 @@ for branch in "${push_branches[@]}"; do
   if [[ "$GITHUB_REF" = "refs/heads/${branch}" ]]; then
     echo "Matches: start pushing"
     "${FOREST_DIR}"/docker_push.sh "$@"
-    "${FOREST_DIR}"/container-digest.sh "$@"
+    "${FOREST_DIR}"/container_digest.sh "$@"
     exit 0
   fi
 done

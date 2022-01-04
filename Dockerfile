@@ -20,7 +20,7 @@ ENV FOREST_DIR=/forest
 RUN mkdir -p ${FOREST_DIR}
 
 COPY LICENSE.md README.md ${FOREST_DIR}/
-COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh ${FOREST_DIR}/
+COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh container_digest.sh ${FOREST_DIR}/
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
