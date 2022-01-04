@@ -22,6 +22,9 @@ inputs:
   base-dir:
     description: 'Base directory to perform the docker build'
     default: '.'
+outputs:
+  container-digest:
+    description: 'Container Digest'
 runs:
   using: 'docker'
   image: 'Dockerfile'
