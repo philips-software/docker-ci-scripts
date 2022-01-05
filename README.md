@@ -27,7 +27,7 @@ This action will build a docker container from a given directory.
 <!-- action-docs-description -->
 ## Description
 
-Builds docker images and publish master
+Builds docker images and publish them on request
 
 
 <!-- action-docs-description -->
@@ -37,11 +37,11 @@ Builds docker images and publish master
 | parameter | description | required | default |
 | - | - | - | - |
 | dockerfile | Path to Dockerfile | `true` |  |
-| image-name | The name of the Docker image | `true` |  |
+| image-name | The name of the image | `true` |  |
 | tags | String with tags, separated by a space | `true` |  |
 | push-branch | Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches | `false` |  |
 | push-branches | Specifies branches to push, separated by a space | `false` | master main |
-| base-dir | Base directory to perform the docker build | `false` | . |
+| base-dir | Base directory to perform the build | `false` | . |
 
 
 
@@ -85,6 +85,7 @@ In every docker container there are two files:
 | - | - |
 | container-digest | Container digest. Can be used for generating provenance and signing. |
 | container-tags | Container tags. Can be used for generating provenance and signing. |
+| push-indicator | Is set to true when containers have been pushed to the container repository |
 
 
 
