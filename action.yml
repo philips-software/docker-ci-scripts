@@ -1,5 +1,5 @@
 name: 'docker-build-and-publish'
-description: 'Builds docker images and publish master'
+description: 'Builds docker images and publish them on request'
 author: "Jeroen Knoops <jeroen.knoops@philips.com>"
 branding:
   icon: "anchor"
@@ -9,7 +9,7 @@ inputs:
     description: 'Path to Dockerfile'
     required: true
   image-name:
-    description: 'The name of the Docker image'
+    description: 'The name of the image'
     required: true
   tags:
     description: 'String with tags, separated by a space'
@@ -20,13 +20,15 @@ inputs:
     description: 'Specifies branches to push, separated by a space'
     default: 'master main'
   base-dir:
-    description: 'Base directory to perform the docker build'
+    description: 'Base directory to perform the build'
     default: '.'
 outputs:
   container-digest:
     description: 'Container digest. Can be used for generating provenance and signing.'
   container-tags:
     description: 'Container tags. Can be used for generating provenance and signing.'
+  push-indicator:
+    description: 'Is set to true when containers have been pushed to the container repository'
 runs:
   using: 'docker'
   image: 'Dockerfile'
