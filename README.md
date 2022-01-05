@@ -79,6 +79,14 @@ In every docker container there are two files:
 * `REPO` - contains a link to the github repository with the commit sha.
 
 <!-- action-docs-outputs -->
+## Outputs
+
+| parameter | description |
+| - | - |
+| container-digest | Container digest. Can be used for generating provenance and signing. |
+| container-tags | Container tags. Can be used for generating provenance and signing. |
+
+
 
 <!-- action-docs-outputs -->
 <!-- action-docs-runs -->
