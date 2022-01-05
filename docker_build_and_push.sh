@@ -24,6 +24,9 @@ read -ra push_branches <<< "$PUSH_BRANCHES"
 for branch in "${push_branches[@]}"; do
   if [[ "$GITHUB_REF" = "refs/heads/${branch}" ]]; then
     echo "Matches: start pushing"
+
+    echo "::set-output name=push-indicator::true"
+
     "${FOREST_DIR}"/docker_push.sh "$@"
     "${FOREST_DIR}"/container_digest.sh "$@"
     exit 0
