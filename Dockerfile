@@ -12,7 +12,7 @@ LABEL "maintainer"="Jeroen Knoops <jeroen.knoops@philips.com>"
 LABEL "version"="0.0.0"
 
 LABEL "com.github.actions.name"="Docker Build and Push for Github Action"
-LABEL "com.github.actions.description"="Builds docker images and publish master"
+LABEL "com.github.actions.description"="Builds docker images and publish them on request"
 LABEL "com.github.actions.icon"="terminal"
 LABEL "com.github.actions.color"="gray-dark"
 
