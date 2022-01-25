@@ -7,6 +7,8 @@ RUNNER_OS=$(uname)
 # RUNNER_ARCH=$(uname -m)
 RUNNER_ARCH=X64
 
+uname -a
+
 #cosign install script
 shopt -s expand_aliases
 if [ -z "$NO_COLOR" ]; then

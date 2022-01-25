@@ -89,3 +89,24 @@ then
   echo "Finished getting SLSA Provenance"
   echo "============================================================================================"
 fi
+
+if [ -n "${COSIGN_PRIVATE_KEY}" ]
+then
+  echo "Attaching SLSA Provenance with Cosign"
+  echo "Get predicate"
+  jq .predicate < provenance.json > provenance-predicate.json
+
+  echo "Attest predicate"
+  # COSGIN_PASSWORD should be passed as environment variable
+  echo "${COSIGN_PRIVATE_KEY}" > cosign.key
+  cosign attest --predicate provenance-predicate.json --key cosign.key --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+
+  echo "Verify predicate"
+  echo "${COSIGN_PUBLIC_KEY}" > cosign.pub
+  cosign verify-attestation --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+
+  echo "Cleanup"
+  rm cosign.key
+  rm cosign.pub
+fi
+

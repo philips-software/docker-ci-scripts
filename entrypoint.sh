@@ -11,10 +11,7 @@ then
   echo "- SLSA Provenance ---------"
 fi
 
-# For future extention.
-# 1) Attach SLSA_PROVENANCE json to docker image
-# 2) Sign docker image
-if [ -n "${COSIGN}" ]
+if [ -n "${COSIGN_PRIVATE_KEY}" ]
 then
   echo "+ Cosign ------------------"
   echo "| Installing cosign"
