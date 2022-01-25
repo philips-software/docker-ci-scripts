@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SLSA_PROVENANCE_VERSION=0.5.0
-INSTALL_DIR=$HOME/.cosign
+SLSA_PROVENANCE_VERSION=0.5.1
+INSTALL_DIR=$HOME/.slsa_provenance
 
 function install_slsa_provenance {
     case "$(uname -s)" in
@@ -15,8 +15,8 @@ function install_slsa_provenance {
             ;;
     esac
 
-    curl -qLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz
-    curl -qLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/checksums.txt
+    curl -sSLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz
+    curl -sSLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/checksums.txt
     < checksums.txt grep slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz | $shasum -c -
 
     # shellcheck disable=SC2181
@@ -25,12 +25,9 @@ function install_slsa_provenance {
         exit 1
     fi
 
-    echo "INSTALL_DIR: ${INSTALL_DIR}"
     mkdir -p "${INSTALL_DIR}"
     tar -xf slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz -C "${INSTALL_DIR}"
     chmod +x "${INSTALL_DIR}"/slsa-provenance
-    echo "ls"
-    ls -lah "${INSTALL_DIR}"
     rm -f slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz checksums.txt
 }
 
