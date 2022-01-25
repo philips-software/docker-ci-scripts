@@ -12,6 +12,7 @@ This action will build a docker container from a given directory.
 - Each docker container contains information about the exact context in which the container is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
+- If required, the provenance file is attached to the container. 
 
 In every docker container there are two files:
 * `TAGS` - contains all tags associated with this container at time it was build.
@@ -185,6 +186,13 @@ This action is an `docker` action.
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+```
+
+Verify attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
+
+```bash
+repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
+cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
 ```
 
 ## Example projects
