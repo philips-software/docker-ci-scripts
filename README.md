@@ -188,12 +188,15 @@ This action is an `docker` action.
     COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
 ```
 
-Verify attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
+Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
 repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
 cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
 ```
+
+This is nice, because you can see how and when the image was build, without downloading it!
+You can inspect the provenance and decide on whether you want use the image.
 
 ## Example projects
 
