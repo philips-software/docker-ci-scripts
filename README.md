@@ -28,7 +28,7 @@ This action will build a docker container from a given directory.
 <!-- action-docs-description -->
 ## Description
 
-Builds docker images and publish them on request.
+Builds docker images and publish them on request
 
 
 <!-- action-docs-description -->
@@ -43,6 +43,9 @@ Builds docker images and publish them on request.
 | push-branch | Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches | `false` |  |
 | push-branches | Specifies branches to push, separated by a space | `false` | master main |
 | base-dir | Base directory to perform the build | `false` | . |
+| slsa-provenance | Create SLSA Provenance json | `false` |  |
+| github_context | internal (do not set): the "github" context object in json | `true` | ${{ toJSON(github) }} |
+| runner_context | internal (do not set): the "runner" context object in json | `true` | ${{ toJSON(runner) }} |
 
 
 
@@ -87,6 +90,7 @@ In every docker container there are two files:
 | container-digest | Container digest. Can be used for generating provenance and signing. |
 | container-tags | Container tags. Can be used for generating provenance and signing. |
 | push-indicator | Is set to true when containers have been pushed to the container repository |
+| slsa-provenance-file | SLSA provenance file if created |
 
 
 
