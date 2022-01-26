@@ -53,6 +53,7 @@ Builds docker images and publish them on request
 | push-branches | Specifies branches to push, separated by a space | `false` | master main |
 | base-dir | Base directory to perform the build | `false` | . |
 | slsa-provenance | Create SLSA Provenance json | `false` |  |
+| sign | Sign image with Cosign. Requires COSIGN environment variables to be set. When used in combination with slsa-provenance it will also attach the slsa-provenance to the image. | `false` |  |
 | github_context | internal (do not set): the "github" context object in json | `true` | ${{ toJSON(github) }} |
 | runner_context | internal (do not set): the "runner" context object in json | `true` | ${{ toJSON(runner) }} |
 
@@ -107,8 +108,8 @@ No need to put this in GitHub Secret vault. Good practice is to put this also in
 
 | parameter | description |
 | - | - |
-| container-digest | Container digest. Can be used for generating provenance and signing. |
-| container-tags | Container tags. Can be used for generating provenance and signing. |
+| container-digest | Container digest. Can be used for generating provenance and signing |
+| container-tags | Container tags. Can be used for generating provenance and signing |
 | push-indicator | Is set to true when containers have been pushed to the container repository |
 | slsa-provenance-file | SLSA provenance file if created |
 
