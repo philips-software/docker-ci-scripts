@@ -11,7 +11,7 @@ then
   echo "- SLSA Provenance ---------"
 fi
 
-if [ -n "${COSIGN_PRIVATE_KEY}" ]
+if [ -n "${SIGN}" ]
 then
   echo "+ Cosign ------------------"
   echo "| Installing cosign"
