@@ -105,6 +105,12 @@ then
   echo "${COSIGN_PUBLIC_KEY}" > cosign.pub
   cosign verify-attestation --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
+  echo "Sign image"
+  cosign sign --key cosign.key "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+
+  echo "Verify signing"
+  cosign verify --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
+
   echo "Cleanup"
   rm cosign.key
   rm cosign.pub
