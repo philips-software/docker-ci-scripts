@@ -4,19 +4,23 @@
 
 [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
 
-This action will build a docker container from a given directory. 
+This action will build a docker image from a given directory. 
 </div>
 
-- You can give the docker container multiple tags.
+- You can give a docker image multiple tags.
 - You can specify for which branch it should push it a docker registry ( `docker.io` by default ). 
-- Each docker container contains information about the exact context in which the container is build.
+- Each docker image contains information about the exact context in which the image is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
+- If required, the image is sign with [cosign](https://github.com/sigstore/cosign).
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
 - If required, the provenance file is attached to the container. 
 
-In every docker container there are two files:
+In every docker container there are two files to the build context:
 * `TAGS` - contains all tags associated with this container at time it was build.
 * `REPO` - contains a link to the github repository with the commit sha.
+
+This information can also be found in the provenance file. Using the provenance file is more secure,
+because you don't need to download and run the image in order to get the information.
 
 ## Contents
 
@@ -150,10 +154,50 @@ This action is an `docker` action.
     GITHUB_ORGANIZATION: organization-here
 ```
 
+#### Signing the Image:
+
+We can automatically sign the image with Cosign if you pass the `sign` argument.
+You need to provide the COSIGN environment variables in order to actually sign it.
+
+You can create a key pair by installing Cosign on your local machine and run:
+```bash
+cosign generate-key-pair
+```
+
+Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secrets.
+
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v3.3.2
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    sign: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+    COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+```
+
+Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
+
+```bash
+  cosign verify --key cosign.pub jeroenknoops/test-image:latest
+```
+
+You will get a result when the image is valid.
+
 #### With SLSA Provenance:
 
 ```yaml
 - name: Build Docker Images
+  id: docker
   uses: philips-software/docker-ci-scripts@v3.4.0
   with:
     dockerfile: .
@@ -166,9 +210,15 @@ This action is an `docker` action.
     DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
     DOCKER_REGISTRY: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
+- name: Show provenance
+  run: |
+    cat ${{ steps.docker.outputs.slsa-provenance-file }}
 ```
 
 #### With SLSA Provenance attached to Image:
+
+You can use Cosign to attach the Provenance file to the image. Obviously you will need to set
+the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
@@ -179,6 +229,7 @@ This action is an `docker` action.
     tags: latest 0.1
     push-branches: main develop
     slsa-provenance: true
+    sign: true
   env:
     DOCKER_USERNAME: ${{ github.actor }}
     DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -201,6 +252,8 @@ You can inspect the provenance and decide on whether you want use the image.
 
 ## Example projects
 
+* [philips-software/docker-node](https://github.com/philips-software/docker-node)
+* [philips-software/docker-blackduck](https://github.com/philips-software/docker-blackduck)
 * [philips-software/docker-openjdk](https://github.com/philips-software/docker-openjdk)
 * [philips-software/docker-goss](https://github.com/philips-software/docker-goss)
 * [philips-software/docker-bats](https://github.com/philips-software/docker-bats)
