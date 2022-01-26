@@ -12,6 +12,11 @@ This action will build a docker container from a given directory.
 - Each docker container contains information about the exact context in which the container is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
+- If required, the provenance file is attached to the container. 
+
+In every docker container there are two files:
+* `TAGS` - contains all tags associated with this container at time it was build.
+* `REPO` - contains a link to the github repository with the commit sha.
 
 ## Contents
 
@@ -48,7 +53,6 @@ Builds docker images and publish them on request
 | runner_context | internal (do not set): the "runner" context object in json | `true` | ${{ toJSON(runner) }} |
 
 
-
 <!-- action-docs-inputs -->
 
 ## Environment variables
@@ -77,10 +81,21 @@ No need to put this in GitHub Secret vault. This will be public anyway.
 **Optional** Github organization. Defaults to DOCKER_ORGANIZATION. Example: `philips-software` 
 No need to put this in GitHub Secret vault. This will be public anyway.
 
-In every docker container there are two files:
+### `COSIGN_PRIVATE_KEY`
 
-* `TAGS` - contains all tags associated with this container at time it was build.
-* `REPO` - contains a link to the github repository with the commit sha.
+**Optional** Cosign Private Key used to attach provenance file.
+Please make sure this is a GitHub Secret.
+
+###  `COSIGN_PASSWORD`
+
+**Optional** Cosign Password used to attach provenance file.
+Please make sure this is a GitHub Secret.
+
+###  `COSIGN_PUBLIC_KEY`
+
+**Optional** Cosign Public Key used to attach provenance file.
+No need to put this in GitHub Secret vault. Good practice is to put this also in a repo as `cosign.pub`.
+
 
 <!-- action-docs-outputs -->
 ## Outputs
@@ -105,8 +120,8 @@ This action is an `docker` action.
 
 ## Example usage
 
-``` 
-- uses: philips-software/docker-ci-scripts@v3.0.0
+```yaml
+- uses: philips-software/docker-ci-scripts@v3.4.0
   with:
     dockerfile: './docker/Dockerfile'
     image-name: 'node'
@@ -119,38 +134,69 @@ This action is an `docker` action.
 
 #### With GitHub Package registry:
 
-```
-      - name: Build Docker Images
-        uses: philips-software/docker-ci-scripts@v3.3.2
-        with:
-          dockerfile: .
-          image-name: image-name-here
-          tags: latest 0.1
-          push-branches: main develop
-        env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY: ghcr.io/organization-here
-          GITHUB_ORGANIZATION: organization-here
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v3.4.0
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
 ```
 
 #### With SLSA Provenance:
 
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v3.4.0
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    slsa-provenance: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
 ```
-      - name: Build Docker Images
-        uses: philips-software/docker-ci-scripts@v3.3.2
-        with:
-          dockerfile: .
-          image-name: image-name-here
-          tags: latest 0.1
-          push-branches: main develop
-          slsa-provenance: true
-        env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY: ghcr.io/organization-here
-          GITHUB_ORGANIZATION: organization-here
+
+#### With SLSA Provenance attached to Image:
+
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v3.3.2
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    slsa-provenance: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+    COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
 ```
+
+Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
+
+```bash
+repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
+cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
+```
+
+This is nice, because you can see how and when the image was build, without downloading it!
+You can inspect the provenance and decide on whether you want use the image.
 
 ## Example projects
 
@@ -180,4 +226,3 @@ Example:
 ## License
 
 [MIT License](./LICENSE)
-
