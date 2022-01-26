@@ -61,3 +61,31 @@ echo "::set-output name=container-tags::${containertags}"
 echo "============================================================================================"
 echo "Finished getting docker digest and tags"
 echo "============================================================================================"
+
+if [ -n "${SLSA_PROVENANCE}" ]
+then
+  echo "Running SLSA Provenance"
+
+  encoded_github="$(echo "$GITHUB_CONTEXT" | base64 -w 0)"
+  encoded_runner="$(echo "$RUNNER_CONTEXT" | base64 -w 0)"
+
+  slsa-provenance generate container \
+    --github-context "$encoded_github" \
+    --runner-context "$encoded_runner" \
+    --repository "$docker_registry_prefix"/"$imagename" \
+    --digest "${containerdigest}" \
+    --tags "${containertags}"
+
+  echo "-------------------------------------------------------------------------------------------"
+  echo " provenance.json "
+  echo "-------------------------------------------------------------------------------------------"
+
+  cat provenance.json
+  echo
+
+  echo "::set-output name=slsa-provenance-file::provenance.json"
+
+  echo "============================================================================================"
+  echo "Finished getting SLSA Provenance"
+  echo "============================================================================================"
+fi

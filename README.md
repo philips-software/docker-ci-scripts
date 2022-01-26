@@ -11,6 +11,7 @@ This action will build a docker container from a given directory.
 - You can specify for which branch it should push it a docker registry ( `docker.io` by default ). 
 - Each docker container contains information about the exact context in which the container is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
+- If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
 
 ## Contents
 
@@ -27,7 +28,7 @@ This action will build a docker container from a given directory.
 <!-- action-docs-description -->
 ## Description
 
-Builds docker images and publish them on request
+Builds docker images and publish them on request.
 
 
 <!-- action-docs-description -->
@@ -122,6 +123,24 @@ This action is an `docker` action.
           image-name: image-name-here
           tags: latest 0.1
           push-branches: main develop
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_REGISTRY: ghcr.io/organization-here
+          GITHUB_ORGANIZATION: organization-here
+```
+
+#### With SLSA Provenance:
+
+```
+      - name: Build Docker Images
+        uses: philips-software/docker-ci-scripts@v3.3.2
+        with:
+          dockerfile: .
+          image-name: image-name-here
+          tags: latest 0.1
+          push-branches: main develop
+          slsa-provenance: true
         env:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

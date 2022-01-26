@@ -1,11 +1,12 @@
 FROM docker:20.10.12-git
 
 RUN apk update && apk add \
-    bash \
-    jq \
-    curl \
-    wget \
-    git
+      bash \
+      jq \
+      curl \
+      wget \
+      git
+
 
 LABEL "name"="docker-build"
 LABEL "maintainer"="Jeroen Knoops <jeroen.knoops@philips.com>"
@@ -22,5 +23,12 @@ RUN mkdir -p ${FOREST_DIR}
 COPY LICENSE.md README.md ${FOREST_DIR}/
 COPY docker_build.sh docker_push.sh docker_build_and_push.sh update_readme.sh container_digest.sh ${FOREST_DIR}/
 COPY entrypoint.sh /
+
+RUN mkdir -p /scripts
+ADD bin/install_cosign.sh /scripts
+RUN chmod +x /scripts/install_cosign.sh
+
+ADD bin/install_slsa_provenance.sh /scripts
+RUN chmod +x /scripts/install_slsa_provenance.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -1,5 +1,31 @@
 #!/bin/sh -l
 
+if [ -n "${SLSA_PROVENANCE}" ]
+then
+  echo "+ SLSA Provenance ---------"
+  echo "| Installing slsa provenance"
+  . $GITHUB_ACTION_PATH/scripts/install_slsa_provenance.sh
+  echo "| Show slsa provenance version"
+  slsa-provenance version
+  echo "| Finished installing slsa-provenance"
+  echo "- SLSA Provenance ---------"
+fi
+
+# For future extention.
+# 1) Attach SLSA_PROVENANCE json to docker image
+# 2) Sign docker image
+if [ -n "${COSIGN}" ]
+then
+  echo "+ Cosign ------------------"
+  echo "| Installing cosign"
+  $GITHUB_ACTION_PATH/scripts/install_cosign.sh
+  export PATH=${HOME}/.cosign:$PATH
+  echo "| Show cosign version"
+  cosign version
+  echo "| Finished installing cosign"
+  echo "- Cosign ------------------"
+fi
+
 echo "dockerfile     : $1"
 echo "image name     : $2"
 echo "tags           : $3"
