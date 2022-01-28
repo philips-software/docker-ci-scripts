@@ -133,7 +133,7 @@ if [ -n "${SBOM}" ]
 then
   echo "Using TERN to generate SBOM"
 
-  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock philipssoftware/tern report -f json -i "$docker_registry_prefix"/"$imagename" > sbom-spdx.json
+  docker run --rm philipssoftware/tern:2.9.1 report -f json -i "$docker_registry_prefix"/"$imagename"@"${containerdigest}" > sbom-spdx.json
 
   echo "::set-output name=sbom-file::sbom-spdx.json"
 
