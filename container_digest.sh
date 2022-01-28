@@ -129,3 +129,36 @@ then
   fi
 fi
 
+if [ -n "${SBOM}" ]
+then
+  echo "Using TERN to generate SBOM"
+
+  docker run --rm philipssoftware/tern:2.9.1 report -f json -i "$docker_registry_prefix"/"$imagename"@"${containerdigest}" > sbom-spdx.json
+
+  echo "::set-output name=sbom-file::sbom-spdx.json"
+
+  echo "============================================================================================"
+  echo "Finished getting SBOM"
+  echo "============================================================================================"
+
+  if [ -n "${SIGN}" ]
+  then
+    echo "Attaching SBOM  with Cosign"
+    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
+
+    echo "Attest SBOM"
+    # COSGIN_PASSWORD should be passed as environment variable
+    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
+    cosign attest --predicate sbom-spdx.json --type spdx --key cosign.key "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+
+    echo "Verify SBOM"
+    echo "${COSIGN_PUBLIC_KEY}" > cosign.pub
+    cosign verify-attestation --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+
+    echo "Cleanup"
+    rm cosign.key
+    rm cosign.pub
+  fi
+fi
+
+

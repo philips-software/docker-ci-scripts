@@ -14,6 +14,8 @@ This action will build a docker image from a given directory.
 - If required, the image is sign with [cosign](https://github.com/sigstore/cosign).
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
 - If required, the provenance file is attached to the container. 
+- If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [VMWare Tern](https://github.com/tern-tools/tern) for that.
+- If required, the SBOM file is attached to the container. 
 
 In every docker container there are two files to the build context:
 * `TAGS` - contains all tags associated with this container at time it was build.
@@ -250,6 +252,63 @@ cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base
 
 This is nice, because you can see how and when the image was build, without downloading it!
 You can inspect the provenance and decide on whether you want use the image.
+
+#### With Software Bill of Material (SBOM):
+
+```yaml
+- name: Build Docker Images
+  id: docker
+  uses: philips-software/docker-ci-scripts@v3.4.0
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    sbom: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+- name: Show SBOM 
+  run: |
+    cat ${{ steps.docker.outputs.sbom-file }}
+```
+
+#### With Software Bill of Material (SBOM) attached to Image:
+
+You can use Cosign to attach the SBOM file to the image. Obviously you will need to set
+the COSIGN environment variables. (see #sign how to generate the key-pair)
+
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v3.3.2
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    sbom: true
+    sign: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+    COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+```
+
+Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
+
+```bash
+repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
+cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
+```
+
+This is nice, because you can see the SBOM of the image, without downloading it!
+You can inspect the SBOM and decide on whether you want use the image.
 
 ## Example projects
 
