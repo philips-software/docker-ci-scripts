@@ -25,8 +25,11 @@ inputs:
   slsa-provenance:
     description: 'Create SLSA Provenance json'
     required: false
+  sbom:
+    description: 'Create Software Bill Of Material in SPDX format'
+    required: false
   sign:
-    description: 'Sign image with Cosign. Requires COSIGN environment variables to be set. When used in combination with slsa-provenance it will also attach the slsa-provenance to the image.'
+    description: 'Sign image with Cosign. Requires COSIGN environment variables to be set. When used in combination with slsa-provenance / sbom it will also attach the results to the image.'
     required: false
   github_context:
     description: 'internal (do not set): the "github" context object in json'
@@ -44,7 +47,10 @@ outputs:
   push-indicator:
     description: 'Is set to true when containers have been pushed to the container repository'
   slsa-provenance-file:
-    description: 'SLSA provenance file if created'
+    description: 'SLSA provenance filename if created'
+  sbom-file:
+    description: 'SBOM filename if created'
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -57,6 +63,7 @@ runs:
     - ${{ inputs.push-branch }}
   env:
     SLSA_PROVENANCE: ${{ inputs.slsa-provenance }}
+    SBOM: ${{ inputs.sbom }}
     SIGN: ${{ inputs.sign }}
     GITHUB_CONTEXT: ${{ inputs.github_context }}
     RUNNER_CONTEXT: ${{ inputs.runner_context }}
