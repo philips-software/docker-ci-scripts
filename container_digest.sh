@@ -133,7 +133,23 @@ if [ -n "${SBOM}" ]
 then
   echo "Using TERN to generate SBOM"
 
-  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock philipssoftware/tern:2.9.1 report -f json -i "$docker_registry_prefix"/"$imagename"@"${containerdigest}" > sbom-spdx.json
+  echo "Save docker tar"
+  DOCKER_ARCHIVE=$(mktemp image.XXXXXXXXXX) || exit 1
+  echo "archive: $DOCKER_ARCHIVE"
+
+  docker save "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o "$DOCKER_ARCHIVE"
+
+  echo "Show dir"
+  ls -lah  
+
+  echo "Show directory"
+  docker run --rm -v $PWD:/data bash ls -l /data/
+
+  echo "Create sbom-spdx.json"
+  docker run --rm -v $PWD:/data philipssoftware/tern:2.9.1 report -f json -w /data/$DOCKER_ARCHIVE > sbom-spdx.json
+
+  echo "Remove archive: $DOCKER_ARCHIVE"
+  rm "$DOCKER_ARCHIVE"
 
   echo "::set-output name=sbom-file::sbom-spdx.json"
 
