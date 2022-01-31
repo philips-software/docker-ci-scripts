@@ -66,18 +66,22 @@ if [ -n "${SIGN}" ]
 then
   echo "Signing image"
 
+  COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+  COSIGN_PUB=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+
   # COSGIN_PASSWORD should be passed as environment variable
-  echo "${COSIGN_PRIVATE_KEY}" > cosign.key
+  echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
+  echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
 
   echo "Sign image"
-  cosign sign --key cosign.key "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+  cosign sign --key "$COSIGN_KEY" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
   echo "Verify signing"
-  cosign verify --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
+  cosign verify --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
 
   echo "Cleanup"
-  rm cosign.key
-  rm cosign.pub
+  rm "$COSIGN_KEY"
+  rm "$COSIGN_PUB"
 fi
 
 if [ -n "${SLSA_PROVENANCE}" ]
@@ -110,22 +114,26 @@ then
   if [ -n "${SIGN}" ]
   then
     echo "Attaching SLSA Provenance with Cosign"
+
+    COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    COSIGN_PUB=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+
+    # COSGIN_PASSWORD should be passed as environment variable
+    echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
+    echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
+
     echo "Get predicate"
-    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
     jq .predicate < provenance.json > provenance-predicate.json
 
     echo "Attest predicate"
-    # COSGIN_PASSWORD should be passed as environment variable
-    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
-    cosign attest --predicate provenance-predicate.json --key cosign.key --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
     echo "Verify predicate"
-    echo "${COSIGN_PUBLIC_KEY}" > cosign.pub
-    cosign verify-attestation --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
     echo "Cleanup"
-    rm cosign.key
-    rm cosign.pub
+    rm "$COSIGN_KEY"
+    rm "$COSIGN_PUB"
   fi
 fi
 
@@ -144,21 +152,22 @@ then
   if [ -n "${SIGN}" ]
   then
     echo "Attaching SBOM  with Cosign"
-    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
+
+    COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    COSIGN_PUB=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+
+    # COSGIN_PASSWORD should be passed as environment variable
+    echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
+    echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
 
     echo "Attest SBOM"
-    # COSGIN_PASSWORD should be passed as environment variable
-    echo "${COSIGN_PRIVATE_KEY}" > cosign.key
-    cosign attest --predicate sbom-spdx.json --type spdx --key cosign.key "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign attest --predicate sbom-spdx.json --type spdx --key "$COSIGN_KEY" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
     echo "Verify SBOM"
-    echo "${COSIGN_PUBLIC_KEY}" > cosign.pub
-    cosign verify-attestation --key cosign.pub "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
     echo "Cleanup"
-    rm cosign.key
-    rm cosign.pub
+    rm "$COSIGN_KEY"
+    rm "$COSIGN_PUB"
   fi
 fi
-
-
