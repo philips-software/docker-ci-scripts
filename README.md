@@ -14,7 +14,7 @@ This action will build a docker image from a given directory.
 - If required, the image is sign with [cosign](https://github.com/sigstore/cosign).
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
 - If required, the provenance file is attached to the container. 
-- If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [VMWare Tern](https://github.com/tern-tools/tern) for that.
+- If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [VMWare Tern](https://github.com/tern-tools/tern) for that. (very slow at the moment)
 - If required, the SBOM file is attached to the container. 
 
 In every docker container there are two files to the build context:
