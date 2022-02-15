@@ -117,8 +117,8 @@ then
     echo "Attest predicate"
     cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
-    echo "Verify predicate"
-    cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    # echo "Verify predicate"
+    # cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
   fi
 fi
@@ -142,8 +142,10 @@ then
     echo "Attest SBOM"
     cosign attest --predicate sbom-spdx.json --type spdx --key "$COSIGN_KEY" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
-    echo "Verify SBOM"
-    cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    echo "Done attesting the SBOM"
+
+    echo "You can verify the attestation with:"
+    echo "  $ cosign verify-attestation --key $COSIGN_PUB ${docker_registry_prefix}/${imagename}@${containerdigest}"
   fi
 fi
 
