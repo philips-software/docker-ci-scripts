@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COSIGN_RELEASE=v1.4.1
+COSIGN_RELEASE=v1.5.1
 INSTALL_DIR=$HOME/.cosign
 
 RUNNER_OS=$(uname)

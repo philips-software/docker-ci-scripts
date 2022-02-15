@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SLSA_PROVENANCE_VERSION=0.6.0
+SLSA_PROVENANCE_VERSION=0.7.0
 INSTALL_DIR=$HOME/.slsa_provenance
 
 function install_slsa_provenance {
