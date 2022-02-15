@@ -31,4 +31,7 @@ RUN chmod +x /scripts/install_cosign.sh
 ADD bin/install_slsa_provenance.sh /scripts
 RUN chmod +x /scripts/install_slsa_provenance.sh
 
+ADD bin/install_syft.sh /scripts
+RUN chmod +x /scripts/install_syft.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
