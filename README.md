@@ -39,7 +39,7 @@ because you don't need to download and run the image in order to get the informa
 <!-- action-docs-description -->
 ## Description
 
-Builds docker images and publishes them on request
+Builds docker images and publish them on request
 
 
 <!-- action-docs-description -->
@@ -123,7 +123,7 @@ No need to put this in GitHub Secret vault. Good practice is to put this also in
 <!-- action-docs-runs -->
 ## Runs
 
-This action is a `docker` action.
+This action is an `docker` action.
 
 
 <!-- action-docs-runs -->
