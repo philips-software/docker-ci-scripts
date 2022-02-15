@@ -125,9 +125,9 @@ fi
 
 if [ -n "${SBOM}" ]
 then
-  echo "Using TERN to generate SBOM"
+  echo "Using Syft to generate SBOM"
 
-  docker run --rm philipssoftware/tern:2.9.1 report -f json -i "$docker_registry_prefix"/"$imagename"@"${containerdigest}" > sbom-spdx.json
+  syft packages "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx.json
 
   echo "::set-output name=sbom-file::sbom-spdx.json"
 

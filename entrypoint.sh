@@ -23,6 +23,17 @@ then
   echo "- Cosign ------------------"
 fi
 
+if [ -n "${SBOM}" ]
+then
+  echo "+ SBOM -------------------"
+  echo "| Installing Syft"
+  . $GITHUB_ACTION_PATH/scripts/install_syft.sh
+  echo "| Show Syft version"
+  syft version
+  echo "| Finished installing Syft"
+  echo "- Syft -------------------"
+fi
+
 echo "dockerfile     : $1"
 echo "image name     : $2"
 echo "tags           : $3"
