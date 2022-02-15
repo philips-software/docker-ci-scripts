@@ -8,17 +8,17 @@ This action will build a docker image from a given directory.
 </div>
 
 - You can give a docker image multiple tags.
-- You can specify for which branch it should push it a docker registry ( `docker.io` by default ). 
+- You can specify for which branch it should push to a docker registry ( `docker.io` by default ). 
 - Each docker image contains information about the exact context in which the image is build.
 - When pushing to docker.io, the description is updated with the `readme.md` file.
-- If required, the image is sign with [cosign](https://github.com/sigstore/cosign).
+- If required, the image is signed with [cosign](https://github.com/sigstore/cosign).
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications. 
 - If required, the provenance file is attached to the container. 
 - If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [VMWare Tern](https://github.com/tern-tools/tern) for that. (very slow at the moment)
 - If required, the SBOM file is attached to the container. 
 
-In every docker container there are two files to the build context:
-* `TAGS` - contains all tags associated with this container at time it was build.
+In every docker image two files are added to the build context:
+* `TAGS` - contains all tags associated with the image at time it was build.
 * `REPO` - contains a link to the github repository with the commit sha.
 
 This information can also be found in the provenance file. Using the provenance file is more secure,
@@ -39,7 +39,7 @@ because you don't need to download and run the image in order to get the informa
 <!-- action-docs-description -->
 ## Description
 
-Builds docker images and publish them on request
+Builds docker images and publishes them on request
 
 
 <!-- action-docs-description -->
@@ -123,7 +123,7 @@ No need to put this in GitHub Secret vault. Good practice is to put this also in
 <!-- action-docs-runs -->
 ## Runs
 
-This action is an `docker` action.
+This action is a `docker` action.
 
 
 <!-- action-docs-runs -->
