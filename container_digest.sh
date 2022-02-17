@@ -127,7 +127,10 @@ if [ -n "${SBOM}" ]
 then
   echo "Using Syft to generate SBOM"
 
-  syft packages "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx.json
+  syft packages "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx-formatted.json
+
+  echo "Remove formatting"
+  jq -c . sbom-spdx-formatted.json > sbom-spdx.json
 
   echo "::set-output name=sbom-file::sbom-spdx.json"
 
