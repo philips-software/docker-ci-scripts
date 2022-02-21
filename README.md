@@ -105,6 +105,10 @@ Please make sure this is a GitHub Secret.
 **Optional** Cosign Public Key used to attach provenance file.
 No need to put this in GitHub Secret vault. Good practice is to put this also in a repo as `cosign.pub`.
 
+### `COSIGN_DOCKER_MEDIA_TYPES`
+
+**Optional** Cosign supports older MEDIA_TYPES.
+You can set this to `1` with this environment variable. Can be used for Artifactory for example.
 
 <!-- action-docs-outputs -->
 ## Outputs
