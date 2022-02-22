@@ -7,7 +7,7 @@ docker_organization=$DOCKER_ORGANIZATION
 
 if [ -z "$DOCKER_REGISTRY" ]; then
   if [ -z "$docker_organization" ]; then
-    echo "  No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
+    echo "::error::No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
     exit 1
   fi
   DOCKER_REGISTRY="docker.io"
@@ -31,12 +31,12 @@ read -ra tags <<<"$alltags"
 basetag=${tags[0]}
 
 if [ -z "$DOCKER_PASSWORD" ]; then
-  echo "  No DOCKER_PASSWORD set. Please provide"
+  echo "::error::No DOCKER_PASSWORD set. Please provide"
   exit 1
 fi
 
 if [ -z "$DOCKER_USERNAME" ]; then
-  echo "  No DOCKER_USERNAME set. Please provide"
+  echo "::error::No DOCKER_USERNAME set. Please provide"
   exit 1
 fi
 
@@ -78,6 +78,9 @@ then
 
   echo "Verify signing"
   cosign verify --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
+ 
+  echo "::notice::Image is signed. You can verify it with the following command."
+  echo "::notice::cosign verify --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest}"
 fi
 
 if [ -n "${SLSA_PROVENANCE}" ]
@@ -97,10 +100,6 @@ then
   echo "-------------------------------------------------------------------------------------------"
   echo " provenance.json "
   echo "-------------------------------------------------------------------------------------------"
-
-  cat provenance.json
-  echo
-
   echo "::set-output name=slsa-provenance-file::provenance.json"
 
   echo "============================================================================================"
@@ -117,9 +116,8 @@ then
     echo "Attest predicate"
     cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
-    # echo "Verify predicate"
-    # cosign verify-attestation --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
-
+    echo "::notice::SLSA Provenance file is attested. You can verify it with the following command."
+    echo "::notice::cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
   fi
 fi
 
@@ -147,8 +145,8 @@ then
 
     echo "Done attesting the SBOM"
 
-    echo "You can verify the attestation with:"
-    echo "  $ cosign verify-attestation --key $COSIGN_PUB ${docker_registry_prefix}/${imagename}@${containerdigest}"
+    echo "::notice::SBOM file is attested. You can verify it with the following command."
+    echo "::notice::cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
   fi
 fi
 
