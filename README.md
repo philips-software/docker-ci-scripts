@@ -170,7 +170,7 @@ You need to provide the COSIGN environment variables in order to actually sign i
 
 You can create a key pair by installing Cosign on your local machine and run:
 ```bash
-cosign generate-key-pair
+  $ cosign generate-key-pair
 ```
 
 Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secrets.
@@ -197,7 +197,7 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
 Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-  cosign verify --key cosign.pub jeroenknoops/test-image:latest
+  $ cosign verify --key cosign.pub jeroenknoops/test-image:latest
 ```
 
 You will get a result when the image is valid.
@@ -252,7 +252,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
+  $ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
 ```
 
 This is nice, because you can see how and when the image was build, without downloading it!
@@ -308,7 +308,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
+$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
 ```
 
 #### With SLSA-Provenance and Software Bill of Material (SBOM) attached to Image:
@@ -339,8 +339,10 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
+
 ```bash
-cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq -r '.payload' | base64 -d
+$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
+$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
 ```
 
 This is nice, because you can see the SBOM of the image, without downloading it!
