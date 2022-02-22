@@ -135,7 +135,7 @@ This action is an `docker` action.
 ## Example usage
 
 ```yaml
-- uses: philips-software/docker-ci-scripts@v3.4.0
+- uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: './docker/Dockerfile'
     image-name: 'node'
@@ -150,7 +150,7 @@ This action is an `docker` action.
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v3.4.0
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -177,7 +177,7 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v3.3.2
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -207,7 +207,7 @@ You will get a result when the image is valid.
 ```yaml
 - name: Build Docker Images
   id: docker
-  uses: philips-software/docker-ci-scripts@v3.4.0
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -231,7 +231,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v3.3.2
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -252,8 +252,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
-cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
+cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
 ```
 
 This is nice, because you can see how and when the image was build, without downloading it!
@@ -264,7 +263,7 @@ You can inspect the provenance and decide on whether you want use the image.
 ```yaml
 - name: Build Docker Images
   id: docker
-  uses: philips-software/docker-ci-scripts@v3.4.0
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -288,7 +287,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v3.3.2
+  uses: philips-software/docker-ci-scripts@v4.1.2
   with:
     dockerfile: .
     image-name: image-name-here
@@ -309,8 +308,39 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-repodigest=$(docker inspect jeroenknoops/test-image:latest | jq -r .[0].RepoDigests[0])
-cosign verify-attestation --key cosign.pub $repodigest | jq -r '.payload' | base64 -d
+cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
+```
+
+#### With SLSA-Provenance and Software Bill of Material (SBOM) attached to Image:
+
+You can use Cosign to attach the SBOM file and the SLSA-provenance file to the image. Obviously you will need to set
+the COSIGN environment variables. (see #sign how to generate the key-pair)
+
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v4.1.2
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    sbom: true
+    sign: true
+    slsa-provenance: true
+  env:
+    DOCKER_USERNAME: ${{ github.actor }}
+    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    DOCKER_REGISTRY: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+    COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+```
+
+Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
+
+```bash
+cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq -r '.payload' | base64 -d
 ```
 
 This is nice, because you can see the SBOM of the image, without downloading it!
