@@ -17,7 +17,7 @@ function install_slsa_provenance {
 
     curl -sSLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz
     curl -sSLO https://github.com/philips-labs/slsa-provenance-action/releases/download/v${SLSA_PROVENANCE_VERSION}/checksums.txt
-    < checksums.txt grep slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz | $shasum -c -
+    < checksums.txt grep -E "slsa-provenance_${SLSA_PROVENANCE_VERSION}_${machine}_amd64.tar.gz$" | $shasum -c -
 
     # shellcheck disable=SC2181
     if [ $? != 0 ] ; then
