@@ -21,7 +21,7 @@ RESPONSE_CODE=$(curl -s --write-out %{response_code} --output /dev/null -H "Auth
 echo "Received response code: $RESPONSE_CODE"
 
 if [ "$RESPONSE_CODE" -eq 200 ]; then
-  echo "Readme updated successfully"
+  echo "Readme updated successfully" >> "$GITHUB_STEP_SUMMARY"
 else
   echo "Error updating readme"
   exit 1

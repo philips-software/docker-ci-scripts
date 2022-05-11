@@ -49,13 +49,22 @@ echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
 echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
 
-echo "::notice::Pushing $docker_registry_prefix/$imagename:$basetag"
+{
+  echo '## Images pushed'
+  echo ''
+  echo '| Image |'
+  echo '| ---- |'
+  echo "| $docker_registry_prefix/$imagename:$basetag |"
+} >> "$GITHUB_STEP_SUMMARY"
+
 docker push "$docker_registry_prefix"/"$imagename":"$basetag"
 
 for tag in "${tags[@]:1}"; do
-  echo "::notice::Pushing $docker_registry_prefix/$imagename:$tag"
+  echo "| $docker_registry_prefix/$imagename:$tag |" >> "$GITHUB_STEP_SUMMARY"
   docker push "$docker_registry_prefix"/"$imagename":"$tag"
 done
+echo '' >> "$GITHUB_STEP_SUMMARY"
+
 echo "--------------------------------------------------------------------------------------------"
 
 echo "Update readme"

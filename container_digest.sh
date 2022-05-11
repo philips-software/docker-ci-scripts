@@ -62,8 +62,10 @@ echo "==========================================================================
 echo "Finished getting docker digest and tags"
 echo "============================================================================================"
 
+echo '## Secure Software Supply Chain :rocket:' >> "$GITHUB_STEP_SUMMARY"
 if [ -n "${SIGN}" ]
 then
+  echo '### Sign image' >> "$GITHUB_STEP_SUMMARY"
   echo "Signing image"
 
   COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
@@ -78,13 +80,18 @@ then
 
   echo "Verify signing"
   cosign verify --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
- 
-  echo "::notice::Image is signed. You can verify it with the following command."
-  echo "::notice::cosign verify --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest}"
+
+  {
+    echo 'Image is signed. You can verify it with the following command:'
+    echo '```bash'
+    echo "cosign verify --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest}"
+    echo '```'
+  } >> "$GITHUB_STEP_SUMMARY"
 fi
 
 if [ -n "${SLSA_PROVENANCE}" ]
 then
+  echo "### SLSA Provenance" >> "$GITHUB_STEP_SUMMARY"
   echo "Running SLSA Provenance"
 
   encoded_github="$(echo "$GITHUB_CONTEXT" | base64 -w 0)"
@@ -116,13 +123,18 @@ then
     echo "Attest predicate"
     cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
 
-    echo "::notice::SLSA Provenance file is attested. You can verify it with the following command."
-    echo "::notice::cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+    {
+      echo "SLSA Provenance file is attested. You can verify it with the following command."
+      echo '```bash'
+      echo "cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+      echo '```'
+    } >> "$GITHUB_STEP_SUMMARY"
   fi
 fi
 
 if [ -n "${SBOM}" ]
 then
+  echo "### SBOM" >> "$GITHUB_STEP_SUMMARY"
   echo "Using Syft to generate SBOM"
 
   syft packages "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx-formatted.json
@@ -145,8 +157,13 @@ then
 
     echo "Done attesting the SBOM"
 
-    echo "::notice::SBOM file is attested. You can verify it with the following command."
-    echo "::notice::cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
+    {
+      echo "SBOM file is attested. You can verify it with the following command."
+      echo '```bash'
+      echo "cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
+      echo '```'
+    } >> "$GITHUB_STEP_SUMMARY"
+
   fi
 fi
 
