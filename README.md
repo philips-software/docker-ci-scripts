@@ -127,7 +127,7 @@ You can set this to `1` with this environment variable. Can be used for Artifact
 <!-- action-docs-runs -->
 ## Runs
 
-This action is an `docker` action.
+This action is a `docker` action.
 
 
 <!-- action-docs-runs -->
