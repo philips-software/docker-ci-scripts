@@ -24,9 +24,14 @@ push() {
 echo "Check if PUSH_ON_GIT_TAG is set"
 if [ "$PUSH_ON_GIT_TAG" = true ]
 then
-  echo "PUSH_ON_GIT_TAG is set: start pushing"
-  push "$@"
-  exit 0
+  if [[ $GITHUB_REF == refs/tags/* ]]
+  then
+    echo "PUSH_ON_GIT_TAG is set and GITHUB_REF ( $GITHUB_REF ) is a tag: start pushing"
+    push "$@"
+    exit 0
+  else
+    echo "GITHUB_REF is not a tag.. it is: ${GITHUB_REF}"
+  fi
 else
   echo "PUSH_ON_GIT_TAG is not set"
 fi
