@@ -3,7 +3,7 @@
 set -e
 
 help() {
-  echo "This script requires three arguments, directory with the Docker file, Docker image name and the Docker tag."
+  echo "This script requires four arguments, directory with the Docker file, Docker image name, Base directory, and the Docker tag."
   echo "Usages: $(basename "$0") <docker-file-directory> <docker-image-name> <base-dir> <tag>"
 }
 
@@ -12,7 +12,29 @@ if [ "$#" -lt 4 ]; then
   exit 1
 fi
 
+push() {
+  echo "::set-output name=push-indicator::true"
+
+  "${FOREST_DIR}"/docker_push.sh "$@"
+  "${FOREST_DIR}"/container_digest.sh "$@"
+}
+
 "${FOREST_DIR}"/docker_build.sh "$@"
+
+echo "Check if PUSH_ON_GIT_TAG is set"
+if [ "$PUSH_ON_GIT_TAG" = true ]
+then
+  if [[ $GITHUB_REF == refs/tags/* ]]
+  then
+    echo "PUSH_ON_GIT_TAG is set and GITHUB_REF ( $GITHUB_REF ) is a tag: start pushing"
+    push "$@"
+    exit 0
+  else
+    echo "GITHUB_REF is not a tag.. it is: ${GITHUB_REF}"
+  fi
+else
+  echo "PUSH_ON_GIT_TAG is not set"
+fi
 
 echo "Check if we need to push the docker images to docker hub:"
 # shellcheck disable=SC2153
@@ -24,11 +46,7 @@ read -ra push_branches <<< "$PUSH_BRANCHES"
 for branch in "${push_branches[@]}"; do
   if [[ "$GITHUB_REF" = "refs/heads/${branch}" ]]; then
     echo "Matches: start pushing"
-
-    echo "::set-output name=push-indicator::true"
-
-    "${FOREST_DIR}"/docker_push.sh "$@"
-    "${FOREST_DIR}"/container_digest.sh "$@"
+    push "$@"
     exit 0
   fi
 done
