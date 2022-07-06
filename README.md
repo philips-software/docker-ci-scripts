@@ -377,6 +377,7 @@ This can be done with a small snippet:
     dockerfile: './docker/Dockerfile'
     image-name: 'node'
     tags: 'latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}'
+    push-on-git-tag: 'true'
   env:
     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
