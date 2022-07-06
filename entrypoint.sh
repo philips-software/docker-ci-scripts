@@ -34,6 +34,13 @@ then
   echo "- Syft -------------------"
 fi
 
+if [ "${PUSH_ON_GIT_TAG}" = true ]
+then
+  echo "+ PUSH_ON_GIT_TAG -------------------"
+  echo "| Push on git tag flag is set to true."
+  echo "- PUSH_ON_GIT_TAG -------------------"
+fi
+
 echo "dockerfile     : $1"
 echo "image name     : $2"
 echo "tags           : $3"

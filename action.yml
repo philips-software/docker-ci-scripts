@@ -19,6 +19,9 @@ inputs:
   push-branches:
     description: 'Specifies branches to push, separated by a space'
     default: 'master main'
+  push-on-git-tag:
+    description: 'Push when a git tag is created'
+    default: 'false'
   base-dir:
     description: 'Base directory to perform the build'
     default: '.'
@@ -65,5 +68,6 @@ runs:
     SLSA_PROVENANCE: ${{ inputs.slsa-provenance }}
     SBOM: ${{ inputs.sbom }}
     SIGN: ${{ inputs.sign }}
+    PUSH_ON_GIT_TAG: ${{ inputs.push-on-git-tag }}
     GITHUB_CONTEXT: ${{ inputs.github_context }}
     RUNNER_CONTEXT: ${{ inputs.runner_context }}
