@@ -91,7 +91,7 @@ echo "$alltags" >TAGS
 echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
 
-# shellcheck disable=SC2153
+# shellcheck disable=SC2086
 docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" $docker_build_args
 
 echo "--------------------------------------------------------------------------------------------"
