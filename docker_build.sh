@@ -46,6 +46,15 @@ fi
 echo "Github organization: $github_organization"
 echo "--------------------------------------------------------------------------------------------"
 
+# Checking DOCKER_BUILD_ARGS environment variable
+
+# shellcheck disable=SC2153
+docker_build_args=$DOCKER_BUILD_ARGS
+if [ -z "$docker_build_args" ]; then
+  echo "  No DOCKER_BUILD_ARGS provided."
+else
+  echo "  Using DOCKER_BUILD_ARGS=${docker_build_args}"
+fi
 
 dockerfile=$1
 shift
@@ -81,8 +90,8 @@ echo "$alltags" >TAGS
 
 echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
-
-docker build . -f "${dockerfilepath}" -t "$docker_registry_prefix"/"$imagename":"$basetag"
+echo $docker_build_args
+docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" $docker_build_args
 
 echo "--------------------------------------------------------------------------------------------"
 for tag in "${tags[@]:1}"; do
