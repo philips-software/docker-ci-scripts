@@ -53,7 +53,7 @@ docker_build_args=$DOCKER_BUILD_ARGS
 if [ -z "$docker_build_args" ]; then
   echo "  No DOCKER_BUILD_ARGS provided."
 else
-  echo "  Using DOCKER_BUILD_ARGS=${docker_build_args}"
+  echo "  Using provided DOCKER_BUILD_ARGS"
 fi
 
 dockerfile=$1
@@ -90,7 +90,6 @@ echo "$alltags" >TAGS
 
 echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
-echo $docker_build_args
 docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" $docker_build_args
 
 echo "--------------------------------------------------------------------------------------------"
