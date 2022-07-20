@@ -90,7 +90,7 @@ echo "$alltags" >TAGS
 
 echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
-docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" $docker_build_args
+docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" "$docker_build_args"
 
 echo "--------------------------------------------------------------------------------------------"
 for tag in "${tags[@]:1}"; do
