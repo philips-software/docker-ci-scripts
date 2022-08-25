@@ -71,15 +71,15 @@ Builds docker images and publish them on request
 
 These variables can be set in the github repository secret vault.
 
-### `DOCKER_USERNAME`
+### `REGISTRY_USERNAME`
 
-**Required** Docker username
+**Required** Registry username
 
-### `DOCKER_PASSWORD`
+### `REGISTRY_TOKEN`
 
-**Required** Docker password
+**Required** Registry token
 
-### `DOCKER_REGISTRY`
+### `REGISTRY_URL`
 
 **Optional** Registry to push the docker image to. Defaults to Docker hub.
 
@@ -158,8 +158,8 @@ This action is a `docker` action.
     image-name: "node"
     tags: "latest 12 12.1 12.1.4"
   env:
-    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+    REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+    REGISTRY_TOKEN: "${{ secrets.REGISTRY_TOKEN }}"
     DOCKER_ORGANIZATION: myDockerOrganization
 ```
 
@@ -172,8 +172,8 @@ This action is a `docker` action.
     image-name: "node"
     tags: "latest 12 12.1 12.1.4"
   env:
-    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+    REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+    REGISTRY_TOKEN: "${{ secrets.REGISTRY_TOKEN }}"
     DOCKER_ORGANIZATION: myDockerOrganization
     FOO_BUILD_ARG: "foo"
     BAR_BUILD_ARG: ${{ secrets.SECRET_BAR_BUILD_ARG }}
@@ -191,9 +191,9 @@ This action is a `docker` action.
     tags: latest 0.1
     push-branches: main develop
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 ```
 
@@ -220,9 +220,9 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
     push-branches: main develop
     sign: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -250,9 +250,9 @@ You will get a result when the image is valid.
     push-branches: main develop
     slsa-provenance: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 - name: Show provenance
   run: |
@@ -275,9 +275,9 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     slsa-provenance: true
     sign: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -306,9 +306,9 @@ You can inspect the provenance and decide on whether you want use the image.
     push-branches: main develop
     sbom: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 - name: Show SBOM
   run: |
@@ -331,9 +331,9 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     sbom: true
     sign: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -363,9 +363,9 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     sign: true
     slsa-provenance: true
   env:
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_REGISTRY: ghcr.io/organization-here
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -413,8 +413,8 @@ This can be done with a small snippet:
     tags: "latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}"
     push-on-git-tag: "true"
   env:
-    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+    REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+    REGISTRY_TOKEN: "${{ secrets.REGISTRY_TOKEN }}"
     DOCKER_ORGANIZATION: myDockerOrganization
 ```
 

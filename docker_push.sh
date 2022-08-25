@@ -5,19 +5,19 @@ set -e
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
-if [ -z "$DOCKER_REGISTRY" ]; then
+if [ -z "$REGISTRY_URL" ]; then
   if [ -z "$docker_organization" ]; then
     echo "::error::No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
     exit 1
   fi
-  DOCKER_REGISTRY="docker.io"
-  docker_registry_prefix="$DOCKER_REGISTRY/$docker_organization"
+  REGISTRY_URL="docker.io"
+  registry_url_prefix="$REGISTRY_URL/$docker_organization"
   echo "Docker organization: $docker_organization"
 else
-  docker_registry_prefix="$DOCKER_REGISTRY"
+  registry_url_prefix="$REGISTRY_URL"
 fi
 
-echo "docker_registry_prefix: $docker_registry_prefix"
+echo "registry_url_prefix: $registry_url_prefix"
 
 if [ "$#" -lt 4 ]; then
   echo "::error::You need to provide a directory with a Dockerfile in it, Docker image name, base-dir and a tag."
@@ -35,33 +35,33 @@ IFS=' '
 read -ra tags <<<"$alltags"
 basetag=${tags[0]}
 
-if [ -z "$DOCKER_PASSWORD" ]; then
-  echo "::error::No DOCKER_PASSWORD set. Please provide"
+if [ -z "$REGISTRY_TOKEN" ]; then
+  echo "::error::No REGISTRY_TOKEN set. Please provide"
   exit 1
 fi
 
-if [ -z "$DOCKER_USERNAME" ]; then
-  echo "::error::No DOCKER_USERNAME set. Please provide"
+if [ -z "$REGISTRY_USERNAME" ]; then
+  echo "::error::No REGISTRY_USERNAME set. Please provide"
   exit 1
 fi
 
 echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
-echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
+echo "$REGISTRY_TOKEN" | docker login "$REGISTRY_URL" -u "$REGISTRY_USERNAME" --password-stdin
 
 {
   echo '## Images pushed'
   echo ''
   echo '| Image |'
   echo '| ---- |'
-  echo "| $docker_registry_prefix/$imagename:$basetag |"
+  echo "| $registry_url_prefix/$imagename:$basetag |"
 } >> "$GITHUB_STEP_SUMMARY"
 
-docker push "$docker_registry_prefix"/"$imagename":"$basetag"
+docker push "$registry_url_prefix"/"$imagename":"$basetag"
 
 for tag in "${tags[@]:1}"; do
-  echo "| $docker_registry_prefix/$imagename:$tag |" >> "$GITHUB_STEP_SUMMARY"
-  docker push "$docker_registry_prefix"/"$imagename":"$tag"
+  echo "| $registry_url_prefix/$imagename:$tag |" >> "$GITHUB_STEP_SUMMARY"
+  docker push "$registry_url_prefix"/"$imagename":"$tag"
 done
 echo '' >> "$GITHUB_STEP_SUMMARY"
 
@@ -72,7 +72,7 @@ echo "--------------------------------------------------------------------------
 
 export DOCKER_REPOSITORY="$docker_organization"/"$imagename"
 
-[ "$DOCKER_REGISTRY" = "docker.io" ] && "${FOREST_DIR}"/update_readme.sh || echo "no docker.io so no update"
+[ "$REGISTRY_URL" = "docker.io" ] && "${FOREST_DIR}"/update_readme.sh || echo "no docker.io so no update"
 
 echo "============================================================================================"
 echo "Finished pushing docker images: $builddir"

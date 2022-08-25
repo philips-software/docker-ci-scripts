@@ -8,6 +8,7 @@ and this project uses the version of main tool as main version number .
 
 - [#50] - Fix: Automatic push of README to docker hub is broken.
 - [#48] - Loop through entire array of push-branches
+- [#34] - ** BREAKING ** Rename variables DOCKER_USERNAME, DOCKER_PASSWORD and DOCKER_REGISTRY
 
 ## v3.1.0 - 2020-09-23
 - Allow users to specify multiple branches to push to the artifact repository. `push-branches`
