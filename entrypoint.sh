@@ -52,8 +52,23 @@ if [ -z "$6" ]
   then
     export PUSH_BRANCHES="$4"
   else
-    echo "DEPRECATION WARNING: push-branch will be replaced by push-branches"
+    echo "DEPRECATION WARNING: push-branch will be replaced by push-branches. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
     export PUSH_BRANCHES="$6"
+fi
+
+if [ -n "${DOCKER_USERNAME}" ]; then
+  echo "DEPRECATION WARNING: DOCKER_USERNAME will be replaced by REGISTRY_USERNAME in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  export REGISTRY_USERNAME="${DOCKER_USERNAME}"
+fi
+
+if [ -n "${DOCKER_PASSWORD}" ]; then
+  echo "DEPRECATION WARNING: DOCKER_PASSWORD will be replaced by REGISTRY_TOKEN in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  export REGISTRY_TOKEN="${DOCKER_PASSWORD}"
+fi
+
+if [ -n "${DOCKER_REGISTRY}" ]; then
+  echo "DEPRECATION WARNING: DOCKER_REGISTRY will be replaced by REGISTRY_URL in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  export REGISTRY_URL="${DOCKER_REGISTRY}
 fi
 
 "${FOREST_DIR}"/docker_build_and_push.sh "$1" "$2" "$5" "$3"
