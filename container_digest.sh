@@ -5,19 +5,19 @@ set -e
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
-if [ -z "$DOCKER_REGISTRY" ]; then
+if [ -z "$REGISTRY_URL" ]; then
   if [ -z "$docker_organization" ]; then
     echo "::error::No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
     exit 1
   fi
-  DOCKER_REGISTRY="docker.io"
-  docker_registry_prefix="$DOCKER_REGISTRY/$docker_organization"
+  REGISTRY_URL="docker.io"
+  registry_url_prefix="$REGISTRY_URL/$docker_organization"
   echo "Docker organization: $docker_organization"
 else
-  docker_registry_prefix="$DOCKER_REGISTRY"
+  registry_url_prefix="$REGISTRY_URL"
 fi
 
-echo "docker_registry_prefix: $docker_registry_prefix"
+echo "registry_url_prefix: $registry_url_prefix"
 
 # builddir=$1
 shift
@@ -30,31 +30,31 @@ IFS=' '
 read -ra tags <<<"$alltags"
 basetag=${tags[0]}
 
-if [ -z "$DOCKER_PASSWORD" ]; then
-  echo "::error::No DOCKER_PASSWORD set. Please provide"
+if [ -z "$REGISTRY_TOKEN" ]; then
+  echo "::error::No REGISTRY_TOKEN set. Please provide"
   exit 1
 fi
 
-if [ -z "$DOCKER_USERNAME" ]; then
-  echo "::error::No DOCKER_USERNAME set. Please provide"
+if [ -z "$REGISTRY_USERNAME" ]; then
+  echo "::error::No REGISTRY_USERNAME set. Please provide"
   exit 1
 fi
 
 echo "Login to docker"
 echo "--------------------------------------------------------------------------------------------"
-echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
+echo "$REGISTRY_TOKEN" | docker login "$REGISTRY_URL" -u "$REGISTRY_USERNAME" --password-stdin
 
-docker pull "$docker_registry_prefix"/"$imagename":"$basetag"
+docker pull "$registry_url_prefix"/"$imagename":"$basetag"
 
-echo "Getting digest for $docker_registry_prefix/$imagename:$basetag"
-containerdigest=$(docker inspect "$docker_registry_prefix"/"$imagename":"$basetag" --format '{{ index .RepoDigests 0 }}' | cut -d '@' -f 2)
+echo "Getting digest for $registry_url_prefix/$imagename:$basetag"
+containerdigest=$(docker inspect "$registry_url_prefix"/"$imagename":"$basetag" --format '{{ index .RepoDigests 0 }}' | cut -d '@' -f 2)
 echo "found: ${containerdigest}"
 echo "::set-output name=container-digest::${containerdigest}"
 
 echo "--------------------------------------------------------------------------------------------"
 
 echo "Getting tags"
-containertags=$(docker inspect "$docker_registry_prefix"/"$imagename":"$basetag" --format '{{ join .RepoTags "\n" }}' | sed 's/.*://' | paste -s -d ',' -)
+containertags=$(docker inspect "$registry_url_prefix"/"$imagename":"$basetag" --format '{{ join .RepoTags "\n" }}' | sed 's/.*://' | paste -s -d ',' -)
 echo "found: ${containertags}"
 echo "::set-output name=container-tags::${containertags}"
 
@@ -76,15 +76,15 @@ then
   echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
 
   echo "Sign image"
-  cosign sign --key "$COSIGN_KEY" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+  cosign sign --key "$COSIGN_KEY" "$registry_url_prefix"/"$imagename"@"${containerdigest}"
 
   echo "Verify signing"
-  cosign verify --key "$COSIGN_PUB" "$docker_registry_prefix"/"$imagename"@"${containerdigest}" 
+  cosign verify --key "$COSIGN_PUB" "$registry_url_prefix"/"$imagename"@"${containerdigest}" 
 
   {
     echo 'Image is signed. You can verify it with the following command:'
     echo '```bash'
-    echo "cosign verify --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest}"
+    echo "cosign verify --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
     echo '```'
   } >> "$GITHUB_STEP_SUMMARY"
 fi
@@ -100,7 +100,7 @@ then
   slsa-provenance generate container \
     --github-context "$encoded_github" \
     --runner-context "$encoded_runner" \
-    --repository "$docker_registry_prefix"/"$imagename" \
+    --repository "$registry_url_prefix"/"$imagename" \
     --digest "${containerdigest}" \
     --tags "${containertags}"
 
@@ -121,12 +121,12 @@ then
     jq .predicate < provenance.json > provenance-predicate.json
 
     echo "Attest predicate"
-    cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}"
 
     {
       echo "SLSA Provenance file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+      echo "cosign verify-attestation --key cosign.pub $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
       echo '```'
     } >> "$GITHUB_STEP_SUMMARY"
   fi
@@ -137,7 +137,7 @@ then
   echo "### SBOM" >> "$GITHUB_STEP_SUMMARY"
   echo "Using Syft to generate SBOM"
 
-  syft packages "$docker_registry_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx-formatted.json
+  syft packages "$registry_url_prefix"/"$imagename"@"${containerdigest}" -o spdx-json=sbom-spdx-formatted.json
 
   echo "Remove formatting"
   jq -c . sbom-spdx-formatted.json > sbom-spdx.json
@@ -153,14 +153,14 @@ then
     echo "Attaching SBOM  with Cosign"
 
     echo "Attest SBOM"
-    cosign attest --predicate sbom-spdx.json --type spdx --key "$COSIGN_KEY" "$docker_registry_prefix"/"$imagename"@"${containerdigest}"
+    cosign attest --predicate sbom-spdx.json --type spdx --key "$COSIGN_KEY" "$registry_url_prefix"/"$imagename"@"${containerdigest}"
 
     echo "Done attesting the SBOM"
 
     {
       echo "SBOM file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub $docker_registry_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
+      echo "cosign verify-attestation --key cosign.pub $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
       echo '```'
     } >> "$GITHUB_STEP_SUMMARY"
 

@@ -6,8 +6,16 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- Rename arguments to reflect multiple container registries.
+
+### DEPRECATION
+
+- `DOCKER_USERNAME`, `DOCKER_PASSWORD`, and `DOCKER_REGISTRY` are deprecated. Please use `REGISTRY_USERNAME`, `REGISTRY_TOKEN`, and `REGISTRY_URL`.
+
+## v4.4.0
 - [#50] - Fix: Automatic push of README to docker hub is broken.
 - [#48] - Loop through entire array of push-branches
+- [#34] - ** BREAKING ** Rename variables DOCKER_USERNAME, DOCKER_PASSWORD and DOCKER_REGISTRY
 
 ## v3.1.0 - 2020-09-23
 - Allow users to specify multiple branches to push to the artifact repository. `push-branches`
@@ -21,7 +29,7 @@ and this project uses the version of main tool as main version number .
 - Allow users to specify specific dockerfile instead of path
 
 The `docker build` command is now being called from the root of the project
-instead of the directory. 
+instead of the directory.
 
 This has impact when your project has:
 - Directories with multiple dockerfiles
@@ -30,15 +38,15 @@ This has impact when your project has:
 You now need to change the path to include the directory.
 
 Example:
-- `ADD /scripts/entrypoint.sh entrypoint.sh` becomes: `ADD /6/java/scripts/entrypoint.sh entrypoint` 
+- `ADD /scripts/entrypoint.sh entrypoint.sh` becomes: `ADD /6/java/scripts/entrypoint.sh entrypoint`
 
 ## v2.2.1 - 2020-05-18
 ### Changed
-- [#38] - Auto update readme was not working anymore 
+- [#38] - Auto update readme was not working anymore
 
 ## v2.2.0
 - [#33] - DOCKER_ORGANIZATION is optional when other repository store is used.
-- [#32] - DOCKER_REGISTRY should be an environment variable. 
+- [#32] - DOCKER_REGISTRY should be an environment variable.
 - Fix shellinter
 
 ### Add

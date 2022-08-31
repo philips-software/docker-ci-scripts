@@ -10,7 +10,7 @@ README_FILEPATH="/github/workspace/${README_FILEPATH:="README.md"}"
 
 # Acquire a token for the Docker Hub API
 echo "Acquiring token"
-LOGIN_PAYLOAD="{\"username\": \"${DOCKER_USERNAME}\", \"password\": \"${DOCKER_PASSWORD}\"}"
+LOGIN_PAYLOAD="{\"username\": \"${REGISTRY_USERNAME}\", \"password\": \"${REGISTRY_TOKEN}\"}"
 TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "${LOGIN_PAYLOAD}" https://hub.docker.com/v2/users/login/ | jq -r .token)
 
 # Send a PATCH request to update the description of the repository

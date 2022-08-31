@@ -22,18 +22,18 @@ echo "--------------------------------------------------------------------------
 # shellcheck disable=SC2153
 docker_organization=$DOCKER_ORGANIZATION
 
-if [ -z "$DOCKER_REGISTRY" ]; then
+if [ -z "$REGISTRY_URL" ]; then
   if [ -z "$docker_organization" ]; then
     echo "  No DOCKER_ORGANIZATION set. This is mandatory when using docker.io"
     exit 1
   fi
-  docker_registry_prefix="docker.io/$docker_organization"
+  registry_url_prefix="docker.io/$docker_organization"
   echo "Docker organization: $docker_organization"
 else
-  docker_registry_prefix="$DOCKER_REGISTRY"
+  registry_url_prefix="$REGISTRY_URL"
 fi
 
-echo "docker_registry_prefix: $docker_registry_prefix"
+echo "registry_url_prefix: $registry_url_prefix"
 
 # Checking GITHUB_ORGANIZATION environment variable
 
@@ -92,12 +92,12 @@ echo "repo: https://github.com/$project/tree/$commitsha"
 echo "https://github.com/$project/tree/$commitsha" >REPO
 
 # shellcheck disable=SC2086
-docker build . -f "$dockerfilepath" -t "$docker_registry_prefix"/"$imagename":"$basetag" $docker_build_args
+docker build . -f "$dockerfilepath" -t "$registry_url_prefix"/"$imagename":"$basetag" $docker_build_args
 
 echo "--------------------------------------------------------------------------------------------"
 for tag in "${tags[@]:1}"; do
-  echo "Tagging $docker_registry_prefix/$imagename:$basetag as $docker_registry_prefix/$imagename:$tag"
-  docker tag "$docker_registry_prefix"/"$imagename":"$basetag" "$docker_registry_prefix"/"$imagename":"$tag"
+  echo "Tagging $registry_url_prefix/$imagename:$basetag as $registry_url_prefix/$imagename:$tag"
+  docker tag "$registry_url_prefix"/"$imagename":"$basetag" "$registry_url_prefix"/"$imagename":"$tag"
 done
 echo "============================================================================================"
 echo "Finished building docker images from: $dockerfilepath"
