@@ -68,7 +68,7 @@ fi
 
 if [ -n "${DOCKER_REGISTRY}" ]; then
   echo "DEPRECATION WARNING: DOCKER_REGISTRY will be replaced by REGISTRY_URL in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
-  export REGISTRY_URL="${DOCKER_REGISTRY}
+  export REGISTRY_URL="${DOCKER_REGISTRY}"
 fi
 
 "${FOREST_DIR}"/docker_build_and_push.sh "$1" "$2" "$5" "$3"
