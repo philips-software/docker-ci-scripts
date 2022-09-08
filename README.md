@@ -15,7 +15,7 @@ This action will build a docker image from a given directory.
 - If required, the image is signed with [cosign](https://github.com/sigstore/cosign).
 - If required, a provenance file is created according to the [SLSA.dev](https://slsa.dev) specifications.
 - If required, the provenance file is attached to the container.
-- If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [VMWare Tern](https://github.com/tern-tools/tern) for that. (very slow at the moment)
+- If required, a SBOM file is created according to the [SPDX](https://spdx.dev) specifications. We're using [syft](https://github.com/anchore/syft/) for that.
 - If required, the SBOM file is attached to the container.
 
 In every docker image two files are added to the build context:
@@ -152,7 +152,7 @@ This action is a `docker` action.
 ## Example usage
 
 ```yaml
-- uses: philips-software/docker-ci-scripts@v4.1.2
+- uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: "./docker/Dockerfile"
     image-name: "node"
@@ -166,7 +166,7 @@ This action is a `docker` action.
 #### Using Docker Build arguments:
 
 ```yaml
-- uses: philips-software/docker-ci-scripts@v4.1.2
+- uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: "./docker/Dockerfile"
     image-name: "node"
@@ -184,7 +184,7 @@ This action is a `docker` action.
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -212,7 +212,7 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -242,7 +242,7 @@ You will get a result when the image is valid.
 ```yaml
 - name: Build Docker Images
   id: docker
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -266,7 +266,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -298,7 +298,7 @@ You can inspect the provenance and decide on whether you want use the image.
 ```yaml
 - name: Build Docker Images
   id: docker
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -322,7 +322,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
@@ -353,7 +353,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 
 ```yaml
 - name: Build Docker Images
-  uses: philips-software/docker-ci-scripts@v4.1.2
+  uses: philips-software/docker-ci-scripts@v4.5.0
   with:
     dockerfile: .
     image-name: image-name-here
