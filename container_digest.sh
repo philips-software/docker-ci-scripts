@@ -126,7 +126,7 @@ then
     {
       echo "SLSA Provenance file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+      echo "cosign verify-attestation --key cosign.pub --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
       echo '```'
     } >> "$GITHUB_STEP_SUMMARY"
   fi
@@ -160,7 +160,7 @@ then
     {
       echo "SBOM file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
+      echo "cosign verify-attestation --key cosign.pub --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
       echo '```'
     } >> "$GITHUB_STEP_SUMMARY"
 
