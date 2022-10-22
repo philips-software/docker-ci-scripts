@@ -49,14 +49,14 @@ docker pull "$registry_url_prefix"/"$imagename":"$basetag"
 echo "Getting digest for $registry_url_prefix/$imagename:$basetag"
 containerdigest=$(docker inspect "$registry_url_prefix"/"$imagename":"$basetag" --format '{{ index .RepoDigests 0 }}' | cut -d '@' -f 2)
 echo "found: ${containerdigest}"
-echo "::set-output name=container-digest::${containerdigest}"
+echo "{container-digest}={${containerdigest}}" >> "$GITHUB_OUTPUT"
 
 echo "--------------------------------------------------------------------------------------------"
 
 echo "Getting tags"
 containertags=$(docker inspect "$registry_url_prefix"/"$imagename":"$basetag" --format '{{ join .RepoTags "\n" }}' | sed 's/.*://' | paste -s -d ',' -)
 echo "found: ${containertags}"
-echo "::set-output name=container-tags::${containertags}"
+echo "{container-tags}={${containertags}}" >> "$GITHUB_OUTPUT"
 
 echo "============================================================================================"
 echo "Finished getting docker digest and tags"
@@ -107,7 +107,7 @@ then
   echo "-------------------------------------------------------------------------------------------"
   echo " provenance.json "
   echo "-------------------------------------------------------------------------------------------"
-  echo "::set-output name=slsa-provenance-file::provenance.json"
+  echo "{slsa-provenance-file}={provenance.json}" >> "$GITHUB_OUTPUT"
 
   echo "============================================================================================"
   echo "Finished getting SLSA Provenance"
@@ -142,7 +142,7 @@ then
   echo "Remove formatting"
   jq -c . sbom-spdx-formatted.json > sbom-spdx.json
 
-  echo "::set-output name=sbom-file::sbom-spdx.json"
+  echo "{sbom-file}={sbom-spdx.json}" >> "$GITHUB_OUTPUT"
 
   echo "============================================================================================"
   echo "Finished getting SBOM"
