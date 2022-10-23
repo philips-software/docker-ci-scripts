@@ -13,7 +13,7 @@ if [ "$#" -lt 4 ]; then
 fi
 
 push() {
-  echo "::set-output name=push-indicator::true"
+  echo "{push-indicator}={true}" >> "$GITHUB_OUTPUT"
 
   "${FOREST_DIR}"/docker_push.sh "$@"
   "${FOREST_DIR}"/container_digest.sh "$@"
