@@ -42,14 +42,12 @@ because you don't need to download and run the image in order to get the informa
 ## Description
 
 Builds docker images and publish them on request
-
-
 <!-- action-docs-description -->
 <!-- action-docs-inputs -->
 ## Inputs
 
 | parameter | description | required | default |
-| - | - | - | - |
+| --- | --- | --- | --- |
 | dockerfile | Path to Dockerfile | `true` |  |
 | image-name | The name of the image | `true` |  |
 | tags | String with tags, separated by a space | `true` |  |
@@ -62,9 +60,6 @@ Builds docker images and publish them on request
 | sign | Sign image with Cosign. Requires COSIGN environment variables to be set. When used in combination with slsa-provenance / sbom it will also attach the results to the image. | `false` |  |
 | github_context | internal (do not set): the "github" context object in json | `true` | ${{ toJSON(github) }} |
 | runner_context | internal (do not set): the "runner" context object in json | `true` | ${{ toJSON(runner) }} |
-
-
-
 <!-- action-docs-inputs -->
 
 ## Environment variables
@@ -131,22 +126,17 @@ You can set this to `1` with this environment variable. Can be used for Artifact
 ## Outputs
 
 | parameter | description |
-| - | - |
+| --- | --- |
 | container-digest | Container digest. Can be used for generating provenance and signing |
 | container-tags | Container tags. Can be used for generating provenance and signing |
 | push-indicator | Is set to true when containers have been pushed to the container repository |
 | slsa-provenance-file | SLSA provenance filename if created |
 | sbom-file | SBOM filename if created |
-
-
-
 <!-- action-docs-outputs -->
 <!-- action-docs-runs -->
 ## Runs
 
 This action is a `docker` action.
-
-
 <!-- action-docs-runs -->
 
 ## Example usage
