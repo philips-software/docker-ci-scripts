@@ -13,7 +13,7 @@ if [ "$#" -lt 4 ]; then
 fi
 
 push() {
-  echo "{push-indicator}={true}" >> "$GITHUB_OUTPUT"
+  echo "push-indicator=true" >> "$GITHUB_OUTPUT"
 
   "${FOREST_DIR}"/docker_push.sh "$@"
   "${FOREST_DIR}"/container_digest.sh "$@"
@@ -53,4 +53,3 @@ done
 
 echo "No branches matched to current branch. No need to push the images to docker hub."
 exit 0
-
