@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COSIGN_RELEASE=v1.5.1
+COSIGN_RELEASE=v1.13.1
 INSTALL_DIR=$HOME/.cosign
 
 RUNNER_OS=$(uname)
@@ -37,13 +37,15 @@ shaprog() {
   esac
 }
 
-bootstrap_version='v1.4.1'    
-bootstrap_linux_amd64_sha='08ba779a4e6ff827079abed1a6d1f0a0d9e48aea21f520ddeb42ff912f59d268'
-bootstrap_linux_arm_sha='d13f12dea3b65ec4bcd25fe23d35772f7b0b5997dba14947ce242e1260b3a15d'
-bootstrap_linux_arm64_sha='b0c02b607e722b9d2b1807f6efb73042762e77391c51c8948710e7f571ceaa73'
-bootstrap_darwin_amd64_sha='0908ffd3ceea5534c27059e30276094d63ed9339c2bf75e38e3d88d0a34502f3'
-bootstrap_darwin_arm64_sha='f8162aba987e1afddb20a672e47fb070ec6bf1547f65f23159e0f4a61e4ea673'
-bootstrap_windows_amd64_sha='408557d35b0158590c1978d72cf5079fc299b3f0315f3ece259c6c0f159a079b'
+bootstrap_version='v1.13.1'
+bootstrap_linux_amd64_sha='a50651a67b42714d6f1a66eb6773bf214dacae321f04323c0885f6a433051f95'
+bootstrap_linux_arm_sha='edc24d49459a73f54e78868a3540e1e54452ad2328c66e1eba8bcd78fcd349fc'
+bootstrap_linux_arm64_sha='a7a79a52c7747e2c21554cad4600e6c7130c0429017dd258f9c558d957fa9090'
+bootstrap_darwin_amd64_sha='1d164b8b1fcfef1e1870d809edbb9862afd5995cab63687a440b84cca5680ecf'
+bootstrap_darwin_arm64_sha='02bef878916be048fd7dcf742105639f53706a59b5b03f4e4eaccc01d05bc7ab'
+bootstrap_windows_amd64_sha='78a2774b68b995cc698944f6c235b1c93dcb6d57593a58a565ee7a56d64e4b85'
+cosign_executable_name=cosign
+
 trap "popd >/dev/null" EXIT
 mkdir -p ${INSTALL_DIR}
 pushd ${INSTALL_DIR} > /dev/null
@@ -60,7 +62,7 @@ case ${RUNNER_OS} in
           desired_cosign_v060_signature='cosign_linux_amd64_0.6.0_linux_amd64.sig'
         fi
         ;;
-      
+
       ARM)
         bootstrap_filename='cosign-linux-arm'
         bootstrap_sha=${bootstrap_linux_arm_sha}
@@ -70,7 +72,7 @@ case ${RUNNER_OS} in
           exit 1
         fi
         ;;
-      
+
       ARM64)
         bootstrap_filename='cosign-linux-arm64'
         bootstrap_sha=${bootstrap_linux_arm64_sha}
@@ -80,14 +82,14 @@ case ${RUNNER_OS} in
           exit 1
         fi
         ;;
-      
+
       *)
         log_error "unsupported architecture ${RUNNER_ARCH}"
         exit 1
         ;;
     esac
     ;;
-  
+
   macOS)
     case ${RUNNER_ARCH} in
       X64)
@@ -100,7 +102,7 @@ case ${RUNNER_OS} in
           desired_cosign_v060_signature='cosign_darwin_amd64_0.6.0_darwin_amd64.sig'
         fi
         ;;
-      
+
       ARM64)
         bootstrap_filename='cosign-darwin-arm64'
         bootstrap_sha=${bootstrap_darwin_arm64_sha}
@@ -111,7 +113,7 @@ case ${RUNNER_OS} in
           desired_cosign_v060_signature='cosign_darwin_arm64_0.6.0_darwin_arm64.sig'
         fi
         ;;
-      
+
       *)
         log_error "unsupported architecture $arch"
         exit 1
@@ -200,6 +202,6 @@ if [[ $shaCustom != $shaBootstrap ]]; then
   mv cosign_${COSIGN_RELEASE} cosign
   chmod +x cosign
   export PATH=${INSTALL_DIR}:$PATH
-  
+
   log_info "Installation complete!"
 fi
