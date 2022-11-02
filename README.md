@@ -102,6 +102,13 @@ Examples: Using explicit variables
 - Single explicit build arguments: `--build-arg FOO=foo`
 - Multiple explicit build arguments: `--build-arg FOO=foo --build-arg BAR=bar`
 
+### `KEYLESS`
+
+**Optional** Set to `true` when you want to use keyless signing with [SigStore's Rekor and Fulcio](https://blog.sigstore.dev/sigstore-ga-ddd6ba67894d).
+**Warning** This is a **PUBLIC** transparancy log, this means you will reveal information about your OCI images publically. **DO NOT USE THIS FOR PRIVATE IMAGES**.
+
+You can use `KEYLESS` to start using SigStore's Rekor and Fulcio together with GitHub OIDC. When set, you don't need to specify the three COSIGN Arguments.
+
 ### `COSIGN_PRIVATE_KEY`
 
 **Optional** Cosign Private Key used to attach provenance file.
@@ -190,8 +197,15 @@ This action is a `docker` action.
 #### Signing the Image:
 
 We can automatically sign the image with Cosign if you pass the `sign` argument.
-You need to provide the COSIGN environment variables in order to actually sign it.
 
+This can be done in keyless mode with GitHub OIDC, or you can specify your own keys.
+
+Keyless uses Sigstores Rekor and Fulcio. These are **PUBLIC** transparancy logs. This
+means you should **NOT** use this when dealing with Private Images.
+
+##### Manual, bring your own keys.
+
+You need to provide the COSIGN environment variables in order to actually sign it.
 You can create a key pair by installing Cosign on your local machine and run:
 
 ```bash
@@ -226,6 +240,53 @@ Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
 ```
 
 You will get a result when the image is valid.
+
+##### Keyless
+
+You don't need to provide the COSIGN environment variables in order to actually sign it.
+Instead we're using GitHub OIDC. This means you have to given the workflow premission to use
+the `id-token`.
+
+```yaml
+    permissions:
+      id-token: write
+```
+
+Now you can start signing and adding the attestations without using keys.
+
+```yaml
+- name: Build Docker Images
+  uses: philips-software/docker-ci-scripts@v4.5.0
+  with:
+    dockerfile: .
+    image-name: image-name-here
+    tags: latest 0.1
+    push-branches: main develop
+    sign: true
+    sbom: true
+    slsa: true
+  env:
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_URL: ghcr.io/organization-here
+    GITHUB_ORGANIZATION: organization-here
+    KEYLESS: true
+```
+
+Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
+Keyless siging is still an expermental feature of cosign, so you need to set the flag.
+
+```bash
+  $ export COSIGN_EXPERIMENTAL=1
+  $ cosign verify --key cosign.pub jeroenknoops/test-image:latest
+```
+
+You will get a result when the image is valid.
+
+In the log you will also find a tlog index, which can be used in a web UI to view the attestations.
+This is an example: [signature test-docker-ci-scripts image](https://rekor.tlog.dev/?logIndex=6045530)
+
+> For all the examples below we assume you bring your own keys.. obviously you can also use keyless signing there.
 
 #### With SLSA Provenance:
 

@@ -68,24 +68,52 @@ then
   echo '### Sign image' >> "$GITHUB_STEP_SUMMARY"
   echo "Signing image"
 
-  COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
-  COSIGN_PUB=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+  if [ -n "${KEYLESS}" ]
+  then
+    echo 'Keyless signing'
+    COSIGN_KEY_ARGUMENT=""
+    COSIGN_PUB_ARGUMENT=""
+    export COSIGN_EXPERIMENTAL=1
+  else
+    echo 'Signing using COSIGN keys'
+    COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    COSIGN_PUB=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
 
-  # COSGIN_PASSWORD should be passed as environment variable
-  echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
-  echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
+    # COSGIN_PASSWORD should be passed as environment variable
+    echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
+    echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
 
+    COSIGN_KEY_ARGUMENT="--key $COSIGN_KEY"
+    COSIGN_PUB_ARGUMENT="--key $COSIGN_PUB"
+  fi
   echo "Sign image"
-  cosign sign --key "$COSIGN_KEY" "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+
+  TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+  # shellcheck disable=SC2086
+  cosign sign ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+  tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+  echo "tlog_id: $tlog_id"
+  rm "$TEMP_OUTPUT" 
 
   echo "Verify signing"
-  cosign verify --key "$COSIGN_PUB" "$registry_url_prefix"/"$imagename"@"${containerdigest}" 
+  # shellcheck disable=SC2086
+  cosign verify ${COSIGN_PUB_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}"
 
   {
     echo 'Image is signed. You can verify it with the following command:'
     echo '```bash'
-    echo "cosign verify --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
+    if [ -n "${KEYLESS}" ]
+    then
+      echo "export COSIGN_EXPERIMENTAL=1"
+      echo "cosign verify $registry_url_prefix/$imagename@${containerdigest}"
+    else
+      echo "cosign verify --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
+    fi
     echo '```'
+    if [ -n "${KEYLESS}" ]
+    then
+      echo "Public Rekore tlog-url: <https://rekor.tlog.dev/?logIndex=$tlog_id>"
+    fi
   } >> "$GITHUB_STEP_SUMMARY"
 fi
 
@@ -121,13 +149,30 @@ then
     jq .predicate < provenance.json > provenance-predicate.json
 
     echo "Attest predicate"
-    cosign attest --predicate provenance-predicate.json --key "$COSIGN_KEY" --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+
+    TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    # shellcheck disable=SC2086
+    cosign attest --predicate provenance-predicate.json ${COSIGN_KEY_ARGUMENT} --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+    tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+    echo "tlog_id: $tlog_id"
+    rm "$TEMP_OUTPUT" 
 
     {
       echo "SLSA Provenance file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+      if [ -n "${KEYLESS}" ]
+      then
+        echo "export COSIGN_EXPERIMENTAL=1"
+        echo "cosign verify-attestation --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+        # TODO: Add tlog
+      else
+        echo "cosign verify-attestation --key cosign.pub --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+      fi
       echo '```'
+      if [ -n "${KEYLESS}" ]
+      then
+        echo "Public Rekore tlog-url: <https://rekor.tlog.dev/?logIndex=$tlog_id>"
+      fi
     } >> "$GITHUB_STEP_SUMMARY"
   fi
 fi
@@ -153,23 +198,46 @@ then
     echo "Attaching SBOM  with Cosign"
 
     echo "Attest SBOM"
-    cosign attest --predicate sbom-spdx.json --type spdx --key "$COSIGN_KEY" "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+
+    TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    # shellcheck disable=SC2086
+    cosign attest --predicate sbom-spdx.json --type spdx ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+    tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+    echo "tlog_id: $tlog_id"
+    rm "$TEMP_OUTPUT" 
 
     echo "Done attesting the SBOM"
 
     {
       echo "SBOM file is attested. You can verify it with the following command."
       echo '```bash'
-      echo "cosign verify-attestation --key cosign.pub --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'" 
+      if [ -n "${KEYLESS}" ]
+      then
+        echo "export COSIGN_EXPERIMENTAL=1"
+        echo "cosign verify-attestation --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
+        # TODO: Add tlog
+      else
+        echo "cosign verify-attestation --key cosign.pub --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
+      fi
       echo '```'
+      if [ -n "${KEYLESS}" ]
+      then
+        echo "Public Rekore tlog-url: <https://rekor.tlog.dev/?logIndex=$tlog_id>"
+      fi
     } >> "$GITHUB_STEP_SUMMARY"
 
   fi
 fi
 
 if [ -n "${SIGN}" ]
+then
+  if [ -n "${KEYLESS}" ]
   then
-  echo "Cleanup"
-  rm "$COSIGN_KEY"
-  rm "$COSIGN_PUB"
+    echo "Keyless so nothing to cleanup"
+  else
+    echo "Cleanup"
+    rm "$COSIGN_KEY"
+    rm "$COSIGN_PUB"
+  fi
 fi
+
