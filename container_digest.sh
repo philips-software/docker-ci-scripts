@@ -88,9 +88,11 @@ then
   fi
   echo "Sign image"
 
+  set -x 
   TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
   # shellcheck disable=SC2086
   cosign sign ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+  set +x 
   tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
   echo "tlog_id: $tlog_id"
   rm "$TEMP_OUTPUT" 
