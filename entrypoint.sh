@@ -50,16 +50,19 @@ echo "base dir       : $5"
  export PUSH_BRANCHES="$4"
 
 if [ -n "${DOCKER_USERNAME}" ]; then
+  echo "ERROR: DOCKER_USERNAME is replaced by REGISTRY_USERNAME. Please update scripts."
   echo "ERROR: DOCKER_USERNAME is replaced by REGISTRY_USERNAME. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
   exit 1
 fi
 
 if [ -n "${DOCKER_PASSWORD}" ]; then
+  echo "ERROR: DOCKER_PASSWORD is replaced by REGISTRY_TOKEN. Please update scripts."
   echo "ERROR: DOCKER_PASSWORD is replaced by REGISTRY_TOKEN. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
   exit 1
 fi
 
 if [ -n "${DOCKER_REGISTRY}" ]; then
+  echo "ERROR: DOCKER_REGISTRY is replaced by REGISTRY_URL. Please update scripts."
   echo "ERROR: DOCKER_REGISTRY is replaced by REGISTRY_URL. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
   exit 1
 fi
