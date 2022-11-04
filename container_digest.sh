@@ -88,12 +88,19 @@ then
   fi
   echo "Sign image"
 
-  TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
-  # shellcheck disable=SC2086
-  cosign sign ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
-  tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
-  echo "tlog_id: $tlog_id"
-  rm "$TEMP_OUTPUT" 
+
+  if [ -n "${KEYLESS}" ]
+  then
+    TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+    # shellcheck disable=SC2086
+    cosign sign "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+    tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+    echo "tlog_id: $tlog_id"
+    rm "$TEMP_OUTPUT" 
+  else
+    # shellcheck disable=SC2086
+    cosign sign ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+  fi
 
   echo "Verify signing"
   # shellcheck disable=SC2086
@@ -150,12 +157,18 @@ then
 
     echo "Attest predicate"
 
-    TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
-    # shellcheck disable=SC2086
-    cosign attest --predicate provenance-predicate.json ${COSIGN_KEY_ARGUMENT} --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
-    tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
-    echo "tlog_id: $tlog_id"
-    rm "$TEMP_OUTPUT" 
+    if [ -n "${KEYLESS}" ]
+    then
+      TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+      # shellcheck disable=SC2086
+      cosign attest --predicate provenance-predicate.json --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+      tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+      echo "tlog_id: $tlog_id"
+      rm "$TEMP_OUTPUT" 
+    else
+      # shellcheck disable=SC2086
+      cosign attest --predicate provenance-predicate.json ${COSIGN_KEY_ARGUMENT} --type slsaprovenance "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+    fi
 
     {
       echo "SLSA Provenance file is attested. You can verify it with the following command."
@@ -199,12 +212,18 @@ then
 
     echo "Attest SBOM"
 
-    TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
-    # shellcheck disable=SC2086
-    cosign attest --predicate sbom-spdx.json --type spdx ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
-    tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
-    echo "tlog_id: $tlog_id"
-    rm "$TEMP_OUTPUT" 
+    if [ -n "${KEYLESS}" ]
+    then
+      TEMP_OUTPUT=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
+      # shellcheck disable=SC2086
+      cosign attest --predicate sbom-spdx.json --type spdx "$registry_url_prefix"/"$imagename"@"${containerdigest}" 2> >(tee -a $TEMP_OUTPUT >&2)
+      tlog_id=$(grep "tlog entry created with index"  "$TEMP_OUTPUT" | grep -o '[0-9]\+')
+      echo "tlog_id: $tlog_id"
+      rm "$TEMP_OUTPUT" 
+    else
+      # shellcheck disable=SC2086
+      cosign attest --predicate sbom-spdx.json --type spdx ${COSIGN_KEY_ARGUMENT} "$registry_url_prefix"/"$imagename"@"${containerdigest}"
+    fi
 
     echo "Done attesting the SBOM"
 
