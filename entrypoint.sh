@@ -46,29 +46,25 @@ echo "image name     : $2"
 echo "tags           : $3"
 echo "push branches  : $4"
 echo "base dir       : $5"
-echo "push branch    : $6"
 
-if [ -z "$6" ]
-  then
-    export PUSH_BRANCHES="$4"
-  else
-    echo "DEPRECATION WARNING: push-branch will be replaced by push-branches. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
-    export PUSH_BRANCHES="$6"
-fi
+ export PUSH_BRANCHES="$4"
 
 if [ -n "${DOCKER_USERNAME}" ]; then
-  echo "DEPRECATION WARNING: DOCKER_USERNAME will be replaced by REGISTRY_USERNAME in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
-  export REGISTRY_USERNAME="${DOCKER_USERNAME}"
+  echo "ERROR: DOCKER_USERNAME is replaced by REGISTRY_USERNAME. Please update scripts."
+  echo "ERROR: DOCKER_USERNAME is replaced by REGISTRY_USERNAME. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  exit 1
 fi
 
 if [ -n "${DOCKER_PASSWORD}" ]; then
-  echo "DEPRECATION WARNING: DOCKER_PASSWORD will be replaced by REGISTRY_TOKEN in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
-  export REGISTRY_TOKEN="${DOCKER_PASSWORD}"
+  echo "ERROR: DOCKER_PASSWORD is replaced by REGISTRY_TOKEN. Please update scripts."
+  echo "ERROR: DOCKER_PASSWORD is replaced by REGISTRY_TOKEN. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  exit 1
 fi
 
 if [ -n "${DOCKER_REGISTRY}" ]; then
-  echo "DEPRECATION WARNING: DOCKER_REGISTRY will be replaced by REGISTRY_URL in the next release. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
-  export REGISTRY_URL="${DOCKER_REGISTRY}"
+  echo "ERROR: DOCKER_REGISTRY is replaced by REGISTRY_URL. Please update scripts."
+  echo "ERROR: DOCKER_REGISTRY is replaced by REGISTRY_URL. Please update scripts." >> "$GITHUB_STEP_SUMMARY"
+  exit 1
 fi
 
 "${FOREST_DIR}"/docker_build_and_push.sh "$1" "$2" "$5" "$3"
