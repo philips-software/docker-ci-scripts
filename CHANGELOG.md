@@ -8,6 +8,10 @@ and this project uses the version of main tool as main version number .
 
 - Rename arguments to reflect multiple container registries.
 
+## v5.0.0
+- `DOCKER_USERNAME`, `DOCKER_PASSWORD`, and `DOCKER_REGISTRY` are replaced by `REGISTRY_USERNAME`, `REGISTRY_TOKEN`, and `REGISTRY_URL`.
+- Keyless signing with SigStore Cosign, Rekor and Fulcio. 
+
 ### DEPRECATION
 
 - `DOCKER_USERNAME`, `DOCKER_PASSWORD`, and `DOCKER_REGISTRY` are deprecated. Please use `REGISTRY_USERNAME`, `REGISTRY_TOKEN`, and `REGISTRY_URL`.

@@ -51,7 +51,6 @@ Builds docker images and publish them on request
 | dockerfile | Path to Dockerfile | `true` |  |
 | image-name | The name of the image | `true` |  |
 | tags | String with tags, separated by a space | `true` |  |
-| push-branch | Specifies branch to push, separated by a space - DEPRECATED - Will be replaced by push-branches | `false` |  |
 | push-branches | Specifies branches to push, separated by a space | `false` | master main |
 | push-on-git-tag | Push when a git tag is created | `false` | false |
 | base-dir | Base directory to perform the build | `false` | . |
