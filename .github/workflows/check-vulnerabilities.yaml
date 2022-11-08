@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       runs_on:
-        default: "[ubuntu-latest]"
+        default: ubuntu-latest
         description: Runner specification
         required: false
         type: string
