@@ -1,0 +1,38 @@
+name: Check Vulnerabilities
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: Image to check
+        required: true
+        type: string
+      runs_on:
+        default: "[ubuntu-latest]"
+        description: Runner specification
+        required: false
+        type: string
+
+jobs:
+  check-vulnerabilities:
+    runs-on: "${{ inputs.runs_on}}"
+    steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: 'v1.13.1'
+      - name: Check install!
+        run: cosign version
+      - name: Verify container
+        run: |
+          COSIGN_EXPERIMENTAL=1 cosign verify ${{ inputs.image }}
+      - name: Get SBOM
+        id: spdx
+        run: |
+          echo "spdx=$(COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .') >> $GITHUB_OUTPUT
+      - name: Scan image
+        uses: anchore/scan-action@v3
+        with:
+          sbom: ${{ steps.spdx.outputs.spdx }}
+          fail-build: true
+          severity-cutoff: critical
