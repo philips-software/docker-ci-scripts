@@ -34,8 +34,8 @@ jobs:
         uses: anchore/scan-action@v3
         with:
           sbom: spdx.json
-      - name: Inspect action SARIF report
-        run: cat ${{ steps.scan.outputs.sarif }}
+          output: table
+          fail-build: false
       - name: Remove json 
         run: |
           rm spdx.json 
