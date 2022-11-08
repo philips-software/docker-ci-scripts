@@ -34,7 +34,7 @@ jobs:
         uses: anchore/scan-action@v3
         with:
           sbom: spdx.json
-          output: table
+          output-format: table
           fail-build: false
       - name: Remove json 
         run: |
