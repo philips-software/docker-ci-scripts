@@ -29,7 +29,7 @@ jobs:
       - name: Get SBOM
         id: spdx
         run: |
-          echo "spdx=$(COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .') >> $GITHUB_OUTPUT
+          echo "spdx=$(COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=='https://spdx.dev/Document' ) | .predicate.Data | fromjson | .') >> $GITHUB_OUTPUT
       - name: Scan image
         uses: anchore/scan-action@v3
         with:
