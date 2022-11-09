@@ -1,0 +1,46 @@
+name: Create docker iamge 
+
+on:
+  push:
+    branches:
+      - optimize-workflow
+      - main
+    paths:
+      - Dockerfile
+      - .github/workflows/update-docker-image.yml
+      - container_digest.sh 
+      - docker_build.sh 
+      - docker_build_and_push.sh 
+      - docker_push.sh 
+      - entrypoint.sh 
+      - update_readme.sh 
+      - LICENSE.md
+      - README.md
+      - bin/*
+  workflow_dispatch:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - run:  echo ${{ github.refname }}
+      - name: Build Docker Images
+        uses: philips-software/docker-ci-scripts@v5.0.0
+        with:
+          image-name: docker-ci-scripts
+          tags: ${{ github.ref_name }}
+          push-branches: main ${{ github.ref_name }}
+          slsa-provenance: true
+          sign: true
+          sbom: true
+        env:
+          REGISTRY_USERNAME: ${{ github.actor }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_URL: ghcr.io/philips-software
+          GITHUB_ORGANIZATION: philips-software
+          KEYLESS: true
