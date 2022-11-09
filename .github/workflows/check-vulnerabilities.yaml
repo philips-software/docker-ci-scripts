@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       runs_on:
-        default: "[ubuntu-latest]"
+        default: ubuntu-latest
         description: Runner specification
         required: false
         type: string
@@ -27,12 +27,15 @@ jobs:
         run: |
           COSIGN_EXPERIMENTAL=1 cosign verify ${{ inputs.image }}
       - name: Get SBOM
-        id: spdx
         run: |
-          echo "spdx=$(COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .') >> $GITHUB_OUTPUT
+          COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .' > spdx.json
       - name: Scan image
+        id: scan
         uses: anchore/scan-action@v3
         with:
-          sbom: ${{ steps.spdx.outputs.spdx }}
-          fail-build: true
-          severity-cutoff: critical
+          sbom: spdx.json
+          output-format: table
+          fail-build: false
+      - name: Remove json 
+        run: |
+          rm spdx.json 
