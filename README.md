@@ -173,7 +173,7 @@ This action is a `docker` action.
     DOCKER_ORGANIZATION: myDockerOrganization
     FOO_BUILD_ARG: "foo"
     BAR_BUILD_ARG: ${{ secrets.SECRET_BAR_BUILD_ARG }}
-    DOCKER_BUILD_ARG: "--build-arg FOO_BUILD_ARG --build-arg BAR_BUILD_ARG"
+    DOCKER_BUILD_ARGS: "--build-arg FOO_BUILD_ARG --build-arg BAR_BUILD_ARG"
 ```
 
 #### With GitHub Package registry:
