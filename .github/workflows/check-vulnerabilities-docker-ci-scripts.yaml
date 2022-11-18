@@ -1,4 +1,4 @@
-name: Check vulnerabilities
+name: Check vulnerabilities on docker-ci-scripts
 
 on:
   schedule:
@@ -13,4 +13,4 @@ jobs:
     name: Check Vulnerabities
     uses: philips-software/docker-ci-scripts/.github/workflows/check-vulnerabilities.yaml@main
     with:
-      image: docker://ghcr.io/philips-software/docker-ci-scripts@optimize-workflow
+      image: docker://ghcr.io/philips-software/docker-ci-scripts@main
