@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v3
       - run:  echo ${{ github.refname }}
       - name: Build Docker Images
-        uses: philips-software/docker-ci-scripts@v5.0.0
+        uses: philips-software/docker-ci-scripts@optimize-workflow
         with:
           image-name: docker-ci-scripts
           tags: ${{ github.ref_name }} test
