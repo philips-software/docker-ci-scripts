@@ -13,4 +13,4 @@ jobs:
     name: Check Vulnerabities
     uses: philips-software/docker-ci-scripts/.github/workflows/check-vulnerabilities.yaml@main
     with:
-      image: docker://ghcr.io/philips-software/docker-ci-scripts@main
+      image: ghcr.io/philips-software/docker-ci-scripts@main
