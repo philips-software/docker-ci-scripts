@@ -1,0 +1,16 @@
+name: Check vulnerabilities
+
+on:
+  schedule:
+    - cron: '14 15 * * 2'
+  workflow_dispatch:
+
+permissions: 
+  id-token: write
+
+jobs:
+  check:
+    name: Check Vulnerabities
+    uses: philips-software/docker-ci-scripts/.github/workflows/check-vulnerabilities.yaml@main
+    with:
+      image: docker://ghcr.io/philips-software/docker-ci-scripts@optimize-workflow
