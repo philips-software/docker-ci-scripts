@@ -75,7 +75,6 @@ then
     echo 'Keyless signing'
     COSIGN_KEY_ARGUMENT=""
     COSIGN_PUB_ARGUMENT=""
-    export COSIGN_EXPERIMENTAL=1
   else
     echo 'Signing using COSIGN keys'
     COSIGN_KEY=$(mktemp /tmp/cosign.XXXXXXXXXX) || exit 1
@@ -113,7 +112,6 @@ then
     echo '```bash'
     if [ -n "${KEYLESS}" ]
     then
-      echo "export COSIGN_EXPERIMENTAL=1"
       echo "cosign verify $registry_url_prefix/$imagename@${containerdigest}"
     else
       echo "cosign verify --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
@@ -177,7 +175,6 @@ then
       echo '```bash'
       if [ -n "${KEYLESS}" ]
       then
-        echo "export COSIGN_EXPERIMENTAL=1"
         echo "cosign verify-attestation --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
         # TODO: Add tlog
       else
@@ -234,7 +231,6 @@ then
       echo '```bash'
       if [ -n "${KEYLESS}" ]
       then
-        echo "export COSIGN_EXPERIMENTAL=1"
         echo "cosign verify-attestation --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
         # TODO: Add tlog
       else

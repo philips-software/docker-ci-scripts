@@ -6,6 +6,7 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- Remove experimental flag for keyless signing
 - Rename arguments to reflect multiple container registries.
 
 ## v5.0.0
