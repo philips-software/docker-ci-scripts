@@ -3,7 +3,6 @@ name: Create docker image
 on:
   push:
     branches:
-      - optimize-workflow
       - main
     paths:
       - Dockerfile
@@ -28,9 +27,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-      - run:  echo ${{ github.refname }}
       - name: Build Docker Images
-        uses: philips-software/docker-ci-scripts@optimize-workflow
+        uses: philips-software/docker-ci-scripts@main
         with:
           image-name: docker-ci-scripts
           tags: ${{ github.ref_name }}

@@ -54,7 +54,7 @@ outputs:
 
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/philips-software/docker-ci-scripts:optimize-workflow'
+  image: 'docker://ghcr.io/philips-software/docker-ci-scripts:main'
   args:
     - ${{ inputs.dockerfile }}
     - ${{ inputs.image-name }}
