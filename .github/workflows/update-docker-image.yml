@@ -1,4 +1,4 @@
-name: Create docker iamge 
+name: Create docker image 
 
 on:
   push:
