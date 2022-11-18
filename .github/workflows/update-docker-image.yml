@@ -33,7 +33,7 @@ jobs:
         uses: philips-software/docker-ci-scripts@optimize-workflow
         with:
           image-name: docker-ci-scripts
-          tags: ${{ github.ref_name }} test
+          tags: ${{ github.ref_name }}
           push-branches: main ${{ github.ref_name }}
           slsa-provenance: true
           sign: true
