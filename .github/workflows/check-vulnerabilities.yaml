@@ -1,5 +1,4 @@
 name: Check Vulnerabilities
-
 on:
   workflow_call:
     inputs:
@@ -12,13 +11,12 @@ on:
         description: Runner specification
         required: false
         type: string
-
 jobs:
   check-vulnerabilities:
     runs-on: "${{ inputs.runs_on}}"
     steps:
       - name: Install Cosign
-        uses: sigstore/cosign-installer@main
+        uses: sigstore/cosign-installer@651c379c48edaff4ae5b42cb7430c705698e85f2 # ratchet:sigstore/cosign-installer@main
         with:
           cosign-release: 'v1.13.1'
       - name: Check install!
@@ -31,11 +29,10 @@ jobs:
           COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .' > spdx.json
       - name: Scan image
         id: scan
-        uses: anchore/scan-action@v3
+        uses: anchore/scan-action@9a22e4caae42db0d4c687ab5431e1c3699d0def1 # ratchet:anchore/scan-action@v3
         with:
           sbom: spdx.json
           output-format: table
           fail-build: false
-      - name: Remove json 
-        run: |
-          rm spdx.json 
+      - name: Remove json
+        run: "rm spdx.json \n"
