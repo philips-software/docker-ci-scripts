@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # ratchet:actions/checkout@v3
       - name: Build Docker Images
-        uses: philips-software/docker-ci-scripts@d0045b844f08b0dcb4c62bd4acf6c36877404dae # ratchet:philips-software/docker-ci-scripts@main
+        uses: philips-software/docker-ci-scripts@main
         with:
           image-name: docker-ci-scripts
           tags: ${{ github.ref }} ${{ github.ref_name }}
