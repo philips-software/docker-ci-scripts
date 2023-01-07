@@ -31,7 +31,7 @@ jobs:
         uses: philips-software/docker-ci-scripts@main
         with:
           image-name: docker-ci-scripts
-          tags: ${{ github.ref }} ${{ github.ref_name }}
+          tags: ${{ github.ref_name }}
           push-branches: main ${{ github.ref_name }}
           slsa-provenance: true
           sign: true
