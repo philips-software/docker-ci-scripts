@@ -54,7 +54,9 @@ echo "container-digest=${containerdigest}" >> "$GITHUB_OUTPUT"
 echo "--------------------------------------------------------------------------------------------"
 
 echo "Getting tags"
-containertags=$(docker inspect "$registry_url_prefix"/"$imagename":"$basetag" --format '{{ join .RepoTags "\n" }}' | sed 's/.*://' | paste -s -d ',' -)
+# slsa-provenance expects tags with a comma in between. This can be done with the docker inspect method, but in some cases this will end up incorrect. F.e. when using docker-ci-scripts to generate the docker-ci-script container.
+containertags="${alltags// /,}"
+
 echo "found: ${containertags}"
 echo "container-tags=${containertags}" >> "$GITHUB_OUTPUT"
 
