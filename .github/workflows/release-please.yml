@@ -1,0 +1,22 @@
+---
+name: Create Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+jobs:
+  release_please:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@d3c71f9a0a55385580de793de58da057b3560862 # v3.7.4
+        with:
+          command: manifest
