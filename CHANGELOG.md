@@ -6,6 +6,11 @@ and this project uses the version of main tool as main version number .
 
 ## [Unreleased]
 
+- Cosign version 2.0
+- BREAKING when doing KEYLESS signing: 
+    - You need to acknowledge using a PUBLIC Rekor and Fulcio server when doing keyless signing. Set `public_transparancy_log` to `true`. Default is `false`.
+
+## v5.1.0
 - Remove experimental flag for keyless signing
 - Rename arguments to reflect multiple container registries.
 

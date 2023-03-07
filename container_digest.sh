@@ -73,6 +73,14 @@ then
   if [ -n "${KEYLESS}" ]
   then
     echo 'Keyless signing'
+    if [ "${PUBLIC_TRANSPARANCY_LOG}" == false ]
+    then
+        echo "---------------------------  ERROR --------------------------------"
+        echo "You want to use keyless signing without a public transparancy log."
+        echo "We do not support local REKOR and FULCIO servers at this moment."
+        echo "---------------------------  ERROR --------------------------------"
+        exit 1
+    fi
     COSIGN_KEY_ARGUMENT=""
     COSIGN_PUB_ARGUMENT=""
   else
@@ -84,8 +92,8 @@ then
     echo "${COSIGN_PRIVATE_KEY}" > "$COSIGN_KEY"
     echo "${COSIGN_PUBLIC_KEY}" > "$COSIGN_PUB"
 
-    COSIGN_KEY_ARGUMENT="--key $COSIGN_KEY"
-    COSIGN_PUB_ARGUMENT="--key $COSIGN_PUB"
+    COSIGN_KEY_ARGUMENT="--insecure-ignore-tlog --key $COSIGN_KEY"
+    COSIGN_PUB_ARGUMENT="--insecure-ignore-tlog --key $COSIGN_PUB"
   fi
   echo "Sign image"
 
@@ -114,7 +122,7 @@ then
     then
       echo "cosign verify $registry_url_prefix/$imagename@${containerdigest}"
     else
-      echo "cosign verify --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
+      echo "cosign verify --insecure-ignore-tlog --key cosign.pub $registry_url_prefix/$imagename@${containerdigest}"
     fi
     echo '```'
     if [ -n "${KEYLESS}" ]
@@ -178,7 +186,7 @@ then
         echo "cosign verify-attestation --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
         # TODO: Add tlog
       else
-        echo "cosign verify-attestation --key cosign.pub --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
+        echo "cosign verify-attestation --insecure-ignore-tlog --key cosign.pub --type slsaprovenance $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType==\"https://slsa.dev/provenance/v0.2\" ) | .'"
       fi
       echo '```'
       if [ -n "${KEYLESS}" ]
@@ -234,7 +242,7 @@ then
         echo "cosign verify-attestation --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
         # TODO: Add tlog
       else
-        echo "cosign verify-attestation --key cosign.pub --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
+        echo "cosign verify-attestation --insecure-ignore-tlog --key cosign.pub --type spdx $registry_url_prefix/$imagename@${containerdigest} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType==\"https://spdx.dev/Document\" ) | .predicate.Data | fromjson | .'"
       fi
       echo '```'
       if [ -n "${KEYLESS}" ]

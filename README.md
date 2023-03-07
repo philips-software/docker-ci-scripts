@@ -105,6 +105,7 @@ Examples: Using explicit variables
 
 **Optional** Set to `true` when you want to use keyless signing with [SigStore's Rekor and Fulcio](https://blog.sigstore.dev/sigstore-ga-ddd6ba67894d).
 **Warning** This is a **PUBLIC** transparancy log, this means you will reveal information about your OCI images publically. **DO NOT USE THIS FOR PRIVATE IMAGES**.
+In order to make sure you understand a **PUBLIC** transparancy log is used, you need to set the `public_transparancy_log` argument to `true`.
 
 You can use `KEYLESS` to start using SigStore's Rekor and Fulcio together with GitHub OIDC. When set, you don't need to specify the three COSIGN Arguments.
 
@@ -235,7 +236,7 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
 Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-  $ cosign verify --key cosign.pub jeroenknoops/test-image:latest
+  $ cosign verify --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest
 ```
 
 You will get a result when the image is valid.
@@ -276,8 +277,7 @@ Now you can verify the image f.e. `jeroenknoops/test-image:latest`:
 Keyless siging is still an expermental feature of cosign, so you need to set the flag.
 
 ```bash
-  $ export COSIGN_EXPERIMENTAL=1
-  $ cosign verify --key cosign.pub jeroenknoops/test-image:latest
+  $ cosign verify --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest
 ```
 
 You will get a result when the image is valid.
@@ -337,7 +337,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-  $ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
+  $ cosign verify-attestation --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
 ```
 
 This is nice, because you can see how and when the image was build, without downloading it!
@@ -393,7 +393,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
+$ cosign verify-attestation --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
 ```
 
 #### With SLSA-Provenance and Software Bill of Material (SBOM) attached to Image:
@@ -425,8 +425,8 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
 Now you can verify the attestation for a certain docker-repo f.e. `jeroenknoops/test-image:latest`:
 
 ```bash
-$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
-$ cosign verify-attestation --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
+$ cosign verify-attestation --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .'
+$ cosign verify-attestation --insecure-ignore-tlog --key cosign.pub jeroenknoops/test-image:latest | jq '.payload |= @base64d | .payload | fromjson | select(.predicateType=="https://slsa.dev/provenance/v0.2" ) | .'
 ```
 
 This is nice, because you can see the SBOM of the image, without downloading it!

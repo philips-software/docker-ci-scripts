@@ -32,6 +32,10 @@ inputs:
   sign:
     description: 'Sign image with Cosign. Requires COSIGN environment variables to be set. When used in combination with slsa-provenance / sbom it will also attach the results to the image.'
     required: false
+  public_transparancy_log:
+    description: 'Use PUBLIC Fulcio and Rekor services to store information'
+    required: true
+    default: false
   github_context:
     description: 'internal (do not set): the "github" context object in json'
     required: true
@@ -65,6 +69,7 @@ runs:
     SLSA_PROVENANCE: ${{ inputs.slsa-provenance }}
     SBOM: ${{ inputs.sbom }}
     SIGN: ${{ inputs.sign }}
+    PUBLIC_TRANSPARANCY_LOG: ${{ inputs.public_transparancy_log }}
     PUSH_ON_GIT_TAG: ${{ inputs.push-on-git-tag }}
     GITHUB_CONTEXT: ${{ inputs.github_context }}
     RUNNER_CONTEXT: ${{ inputs.runner_context }}

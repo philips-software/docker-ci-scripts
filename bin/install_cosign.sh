@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COSIGN_RELEASE=v1.14.0
+COSIGN_RELEASE=v2.0.0
 INSTALL_DIR=$HOME/.cosign
 
 RUNNER_OS=$(uname)
@@ -37,13 +37,13 @@ shaprog() {
   esac
 }
 
-bootstrap_version='v1.13.1'
-bootstrap_linux_amd64_sha='a50651a67b42714d6f1a66eb6773bf214dacae321f04323c0885f6a433051f95'
-bootstrap_linux_arm_sha='edc24d49459a73f54e78868a3540e1e54452ad2328c66e1eba8bcd78fcd349fc'
-bootstrap_linux_arm64_sha='a7a79a52c7747e2c21554cad4600e6c7130c0429017dd258f9c558d957fa9090'
-bootstrap_darwin_amd64_sha='1d164b8b1fcfef1e1870d809edbb9862afd5995cab63687a440b84cca5680ecf'
-bootstrap_darwin_arm64_sha='02bef878916be048fd7dcf742105639f53706a59b5b03f4e4eaccc01d05bc7ab'
-bootstrap_windows_amd64_sha='78a2774b68b995cc698944f6c235b1c93dcb6d57593a58a565ee7a56d64e4b85'
+bootstrap_version='v2.0.0'
+bootstrap_linux_amd64_sha='169a53594c437d53ffc401b911b7e70d453f5a2c1f96eb2a736f34f6356c4f2b'
+bootstrap_linux_arm_sha='189d56c9946decdaa272e1dccb47ae64009ea39ac0274cfea00507b9acb877c9'
+bootstrap_linux_arm64_sha='8132cb2fb99a4c60ba8e03b079e12462c27073028a5d08c07ecda67284e0c88d'
+bootstrap_darwin_amd64_sha='d2c8fc0edb42a1e9745da1c43a2928cee044f3b8a1b8df64088a384c7e6f5b5d'
+bootstrap_darwin_arm64_sha='9d7821e1c05da4b07513729cb00d1070c9a95332c66d90fa593ed77d8c72ca2a'
+bootstrap_windows_amd64_sha='e78e7464dc0eda1d6ec063ac2738f4d1418b19dd19f999aa37e1679d5d3af82e'
 cosign_executable_name=cosign
 
 trap "popd >/dev/null" EXIT
@@ -157,7 +157,7 @@ if [[ ${COSIGN_RELEASE} == ${bootstrap_version} ]]; then
   log_info "bootstrap version successfully verified and matches requested version so nothing else to do"
   exit 0
 fi
-semver='^v([0-9]+\.){0,2}(\*|[0-9]+)$'
+semver='^v([0-9]+\.){0,2}(\*|[0-9]+)(-?r?c?)(\.[0-9]+)$'
 if [[ ${COSIGN_RELEASE} =~ $semver ]]; then
   log_info "Custom cosign version '${COSIGN_RELEASE}' requested"
 else
@@ -197,7 +197,7 @@ if [[ $shaCustom != $shaBootstrap ]]; then
     RELEASE_COSIGN_PUB_KEY=https://raw.githubusercontent.com/sigstore/cosign/${COSIGN_RELEASE}/release/release-cosign.pub
   fi
   log_info "Using bootstrap cosign to verify signature of desired cosign version"
-  ./cosign verify-blob --key $RELEASE_COSIGN_PUB_KEY --signature ${desired_cosign_filename}.sig cosign_${COSIGN_RELEASE}
+  ./cosign verify-blob --insecure-ignore-tlog --key $RELEASE_COSIGN_PUB_KEY --signature ${desired_cosign_filename}.sig cosign_${COSIGN_RELEASE}
   rm cosign
   mv cosign_${COSIGN_RELEASE} cosign
   chmod +x cosign
