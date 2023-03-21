@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # ratchet:actions/checkout@v3
-      - uses: npalm/action-docs-action@1ae674557116c26e42a4b278d8d49f0a25a4d670 # ratchet:npalm/action-docs-action@v1.3.0
+      - uses: npalm/action-docs-action@b62a69e27ae389aa92b450f647d37409b9277bf0 # ratchet:npalm/action-docs-action@v1.4.0
       - name: Update readme in the repository
         if: github.event_name != 'pull_request'
         uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a # ratchet:stefanzweifel/git-auto-commit-action@v4.16.0
