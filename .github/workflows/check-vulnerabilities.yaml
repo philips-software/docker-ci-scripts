@@ -29,7 +29,7 @@ jobs:
           COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type spdx ${{ inputs.image }} | jq '.payload |= @base64d | .payload | fromjson | select( .predicateType=="https://spdx.dev/Document" ) | .predicate.Data | fromjson | .' > spdx.json
       - name: Scan image
         id: scan
-        uses: anchore/scan-action@dafbc97d7259af88b61bd260f2fde565d0668a72 # ratchet:anchore/scan-action@v3
+        uses: anchore/scan-action@4be3c24559b430723e51858969965e163b196957 # ratchet:anchore/scan-action@v3
         with:
           sbom: spdx.json
           output-format: table
