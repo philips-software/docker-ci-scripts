@@ -26,7 +26,7 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # ratchet:actions/checkout@v3
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # ratchet:actions/checkout@v3
       - name: Build Docker Images
         uses: philips-software/docker-ci-scripts@main
         with:
