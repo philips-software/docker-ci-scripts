@@ -283,7 +283,7 @@ Keyless siging is still an expermental feature of cosign, so you need to set the
 You will get a result when the image is valid.
 
 In the log you will also find a tlog index, which can be used in a web UI to view the attestations.
-This is an example: [signature test-docker-ci-scripts image](https://rekor.tlog.dev/?logIndex=6045530)
+This is an example: [signature test-docker-ci-scripts image](https://search.sigstore.dev/?logIndex=6045530)
 
 > For all the examples below we assume you bring your own keys.. obviously you can also use keyless signing there.
 

@@ -58,7 +58,7 @@ case ${RUNNER_OS} in
         desired_cosign_filename='cosign-linux-amd64'
         # v0.6.0 had different filename structures from all other releases
         if [[ ${COSIGN_RELEASE} == 'v0.6.0' ]]; then
-          desired_cosign_filename='cosign_linux_amd64'
+          desired_cosign_filename='cosign_linux_amd64_0.6.0_linux_amd64'
           desired_cosign_v060_signature='cosign_linux_amd64_0.6.0_linux_amd64.sig'
         fi
         ;;
@@ -98,7 +98,7 @@ case ${RUNNER_OS} in
         desired_cosign_filename='cosign-darwin-amd64'
         # v0.6.0 had different filename structures from all other releases
         if [[ ${COSIGN_RELEASE} == 'v0.6.0' ]]; then
-          desired_cosign_filename='cosign_darwin_amd64'
+          desired_cosign_filename='cosign_darwin_amd64_0.6.0_darwin_amd64'
           desired_cosign_v060_signature='cosign_darwin_amd64_0.6.0_darwin_amd64.sig'
         fi
         ;;
@@ -109,7 +109,7 @@ case ${RUNNER_OS} in
         desired_cosign_filename='cosign-darwin-arm64'
         # v0.6.0 had different filename structures from all other releases
         if [[ ${COSIGN_RELEASE} == 'v0.6.0' ]]; then
-          desired_cosign_filename='cosign_darwin_arm64'
+          desired_cosign_filename='cosign_darwin_arm64_0.6.0_darwin_arm64'
           desired_cosign_v060_signature='cosign_darwin_arm64_0.6.0_darwin_arm64.sig'
         fi
         ;;
@@ -128,7 +128,7 @@ case ${RUNNER_OS} in
         desired_cosign_filename='cosign-windows-amd64.exe'
         # v0.6.0 had different filename structures from all other releases
         if [[ ${COSIGN_RELEASE} == 'v0.6.0' ]]; then
-          desired_cosign_filename='cosign_windows_amd64.exe'
+          desired_cosign_filename='cosign_windows_amd64_0.6.0_windows_amd64.exe'
           desired_cosign_v060_signature='cosign_windows_amd64_0.6.0_windows_amd64.exe.sig'
         fi
         ;;
@@ -144,8 +144,8 @@ case ${RUNNER_OS} in
     ;;
 esac
 expected_bootstrap_version_digest=${bootstrap_sha}
-log_info "Downloading bootstrap version '${bootstrap_version}' of cosign to verify version to be installed...\n      https://storage.googleapis.com/cosign-releases/${bootstrap_version}/${bootstrap_filename}"
-curl -sL https://storage.googleapis.com/cosign-releases/${bootstrap_version}/${bootstrap_filename} -o cosign
+log_info "Downloading bootstrap version '${bootstrap_version}' of cosign to verify version to be installed...\n      https://github.com/sigstore/cosign/releases/download/${bootstrap_version}/${bootstrap_filename}"
+curl -sL https://github.com/sigstore/cosign/releases/download/${bootstrap_version}/${bootstrap_filename} -o cosign
 shaBootstrap=$(shaprog cosign);
 if [[ $shaBootstrap != ${expected_bootstrap_version_digest} ]]; then
   log_error "Unable to validate cosign version: '${COSIGN_RELEASE}'"
@@ -165,8 +165,8 @@ else
   exit 1
 fi
 # Download custom cosign
-log_info "Downloading platform-specific version '${COSIGN_RELEASE}' of cosign...\n      https://storage.googleapis.com/cosign-releases/${COSIGN_RELEASE}/${desired_cosign_filename}"
-curl -sL https://storage.googleapis.com/cosign-releases/${COSIGN_RELEASE}/${desired_cosign_filename} -o cosign_${COSIGN_RELEASE}
+log_info "Downloading platform-specific version '${COSIGN_RELEASE}' of cosign...\n      https://github.com/sigstore/cosign/releases/download/${COSIGN_RELEASE}/${desired_cosign_filename}"
+curl -sL https://github.com/sigstore/cosign/releases/download/${COSIGN_RELEASE}/${desired_cosign_filename} -o cosign_${COSIGN_RELEASE}
 shaCustom=$(shaprog cosign_${COSIGN_RELEASE});
 # same hash means it is the same release
 if [[ $shaCustom != $shaBootstrap ]]; then
