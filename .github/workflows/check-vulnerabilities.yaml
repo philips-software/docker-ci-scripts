@@ -16,7 +16,7 @@ jobs:
     runs-on: "${{ inputs.runs_on}}"
     steps:
       - name: Install Cosign
-        uses: sigstore/cosign-installer@b18d21aaa20ef40c4e681202a598b7591d5be577 # ratchet:sigstore/cosign-installer@main
+        uses: sigstore/cosign-installer@162dfdf7b9ab8be88c95b4fc982792c4c273e27a # ratchet:sigstore/cosign-installer@main
         with:
           cosign-release: 'v1.13.1'
       - name: Check install!
