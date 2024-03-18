@@ -4,7 +4,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # ratchet:actions/checkout@v3
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # ratchet:actions/checkout@v3
       - name: Lint check
         uses: azohra/shell-linter@6bbeaa868df09c34ddc008e6030cfe89c03394a1 # ratchet:azohra/shell-linter@v0.6.0
         with:
