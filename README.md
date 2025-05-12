@@ -188,7 +188,7 @@ This action is a `docker` action.
     push-branches: main develop
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 ```
@@ -224,7 +224,7 @@ Store the content of `cosign.pub`, `cosign.key` and the password in GitHub Secre
     sign: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -266,7 +266,7 @@ Now you can start signing and adding the attestations without using keys.
     slsa: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     KEYLESS: true
@@ -301,7 +301,7 @@ This is an example: [signature test-docker-ci-scripts image](https://search.sigs
     slsa-provenance: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 - name: Show provenance
@@ -326,7 +326,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     sign: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -357,7 +357,7 @@ You can inspect the provenance and decide on whether you want use the image.
     sbom: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
 - name: Show SBOM
@@ -382,7 +382,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     sign: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
@@ -414,7 +414,7 @@ the COSIGN environment variables. (see #sign how to generate the key-pair)
     slsa-provenance: true
   env:
     REGISTRY_USERNAME: ${{ github.actor }}
-    REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_TOKEN: ${{ github.token }}
     REGISTRY_URL: ghcr.io/organization-here
     GITHUB_ORGANIZATION: organization-here
     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
