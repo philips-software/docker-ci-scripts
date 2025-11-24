@@ -1,5 +1,3 @@
-<div align="center">
-
 # GitHub Action for creating and publishing docker images
 
 [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
@@ -63,6 +61,8 @@ For signing and SBOM/provenance attestations, use GitHub's built-in attestation 
 ```
 
 ---
+
+<div align="center">
 
 This action will build a docker image from a given directory.
 

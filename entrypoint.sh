@@ -20,33 +20,8 @@ echo ""
 echo "=========================================================================================================="
 echo ""
 
-# Write deprecation notice to GitHub Step Summary
-{
-  echo "## ⚠️ DEPRECATION NOTICE"
-  echo ""
-  echo "**This action is deprecated and will no longer receive updates.**"
-  echo ""
-  echo "Please migrate to the official Docker GitHub Actions:"
-  echo ""
-  echo "### Recommended Migration"
-  echo ""
-  echo "1. **[docker/setup-buildx-action](https://github.com/docker/setup-buildx-action)** - Set up Docker Buildx"
-  echo "2. **[docker/metadata-action](https://github.com/docker/metadata-action)** - Generate image metadata and tags"
-  echo "3. **[docker/build-push-action](https://github.com/docker/build-push-action)** - Build and push images"
-  echo ""
-  echo "### Attestations & Signing"
-  echo ""
-  echo "For SBOM and provenance attestations, use the built-in support in \`docker/build-push-action\`:"
-  echo ""
-  echo "- 📖 [Docker Build Attestations Documentation](https://docs.docker.com/build/ci/github-actions/attestations/)"
-  echo ""
-  echo "### Migration Example"
-  echo ""
-  echo "See the [README](https://github.com/philips-software/docker-ci-scripts#readme) for a complete migration example."
-  echo ""
-  echo "---"
-  echo ""
-} >> "$GITHUB_STEP_SUMMARY"
+# Output deprecation warning as GitHub Actions annotation
+echo "::warning file=entrypoint.sh,line=1,title=Action Deprecated::This action is deprecated and will no longer receive updates. Please migrate to the official Docker actions: docker/setup-buildx-action, docker/metadata-action, and docker/build-push-action. See https://github.com/philips-software/docker-ci-scripts#readme for migration guide."
 
 if [ -n "${SLSA_PROVENANCE}" ]
 then
