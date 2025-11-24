@@ -9,7 +9,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # ratchet:actions/checkout@v3
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # ratchet:actions/checkout@v3
       - uses: npalm/action-docs-action@b1dd20339140224c1ffef389467e4fece8dc416b # ratchet:npalm/action-docs-action@v3.1.2
       - name: Update readme in the repository
         if: github.event_name != 'pull_request'
