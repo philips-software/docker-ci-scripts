@@ -4,6 +4,66 @@
 
 [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-green.svg)](https://github.com/marketplace/actions/docker-build-and-publish) [![Release](https://img.shields.io/github/release/philips-software/docker-ci-scripts.svg)](https://github.com/philips-software/docker-ci-scripts/releases)
 
+---
+
+## ⚠️ DEPRECATION NOTICE ⚠️
+
+**This action is deprecated and will no longer receive updates.**
+
+We recommend migrating to the official Docker GitHub Actions, which now provide equivalent functionality with better support and features:
+
+### Migration Path
+
+For building and pushing Docker images with multiple tags, use the official Docker actions:
+
+1. **Set up Docker Buildx**: [`docker/setup-buildx-action`](https://github.com/docker/setup-buildx-action)
+2. **Generate image metadata and tags**: [`docker/metadata-action`](https://github.com/docker/metadata-action)
+3. **Build and push images**: [`docker/build-push-action`](https://github.com/docker/build-push-action)
+
+### Signing and Attestations
+
+For signing and SBOM/provenance attestations, use GitHub's built-in attestation support:
+
+- The latest [`docker/build-push-action`](https://github.com/docker/build-push-action) has native support for SBOM and provenance
+- See: [Docker Build Attestations Documentation](https://docs.docker.com/build/ci/github-actions/attestations/)
+
+### Example Migration
+
+```yaml
+- name: Set up Docker Buildx
+  uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+  id: buildx
+
+- name: Login to Artifactory
+  uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+  with:
+    registry: dl-innersource-docker.artifactory-ehv.ta.philips.com
+    username: ${{ secrets.ARTIFACTORY_USERNAME }}
+    password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+- name: Docker metadata
+  id: meta
+  uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
+  with:
+    images: ghcr.io/${{ github.repository }}
+    tags: |
+      type=schedule,pattern=nightly
+      type=semver,pattern={{version}}
+      type=ref,event=branch,suffix=-{{sha}}
+      type=ref,event=pr,suffix=-{{sha}}
+
+- name: Build and push Docker image
+  uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+  with:
+    context: .
+    file: ./Dockerfile
+    push: true
+    tags: ${{ steps.meta.outputs.tags }}
+    labels: ${{ steps.meta.outputs.labels }}
+```
+
+---
+
 This action will build a docker image from a given directory.
 
 </div>
