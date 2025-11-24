@@ -33,12 +33,8 @@ jobs:
           image-name: docker-ci-scripts
           tags: ${{ github.ref_name }}
           push-branches: main ${{ github.ref_name }}
-          slsa-provenance: true
-          sign: true
-          sbom: true
         env:
           REGISTRY_USERNAME: ${{ github.actor }}
           REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REGISTRY_URL: ghcr.io/philips-software
           GITHUB_ORGANIZATION: philips-software
-          KEYLESS: true
